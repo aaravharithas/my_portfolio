@@ -1,7 +1,13 @@
 import { motion } from "framer-motion";
 import './Contact.css'; // Import the CSS file
+import { DataContext } from "../context/DataContext";
+import { useContext } from "react";
 
-// Data object for contact section
+
+function Contact() {
+
+  const {data} = useContext(DataContext)
+  // Data object for contact section
 const contactData = {
   heading: {
     title: "Contact",
@@ -9,14 +15,13 @@ const contactData = {
     description: "Feel free to contact me on these details",
   },
   items: [
-    { icon: "icon-map-signs", title: "Address", text: "Gurgaon, Haryana 122001" },
-    { icon: "icon-phone2", title: "Contact Number", text: "+91 9321 666 720", link: "tel://+919321666720" },
-    { icon: "icon-paper-plane", title: "Email Address", text: "aaravharithas@gmail.com", link: "mailto:aaravharithas@gmail.com" },
-    { icon: "icon-globe", title: "LinkedIn", text: "Gaurav Sharma", link: "https://www.linkedin.com/in/aaravharithas/" },
+    { icon: "icon-map-signs", title: "Address", text: data.Address },
+    { icon: "icon-phone2", title: "Contact Number", text: data.Phone, link: "tel://" + data.Phone },
+    { icon: "icon-paper-plane", title: "Email Address", text: data.Email, link: "mailto:" + data.Email },
+    { icon: "icon-globe", title: "LinkedIn", text: data.username, link: data.social.Linkedin },
   ],
 };
 
-function Contact() {
   // Framer Motion variants
   const containerVariants = {
     hidden: {},

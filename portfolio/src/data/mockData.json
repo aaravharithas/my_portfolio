@@ -1,0 +1,65 @@
+{
+  "name": "Gaurav Sharma",
+  "title": "A Fullstack Backend Developer",
+  "username":"aaravharithas",
+  "DateOfBirth": "August 11, 2002",
+  "Address" : "Gurgaon, Haryana",
+  "ZipCode" : "122001",
+  "Email" : "aaravharithas@gmail.com",
+  "Phone" : "+91-9321-666-720",
+  "cvLink" : "#",
+  "social" :{
+    "Linkedin" : "https://www.linkedin.com/in/aaravharithas/"
+  },
+  "education": [
+        {
+        "date": "04/2025 - 10/2025",
+        "degree": "Python Full Stack Course",
+        "institution": "Ducat, Gurgaon",
+        "description": "Comprehensive Python Full Stack course covering backend development with Django, frontend integration, and full-stack web application development."
+      },
+      {
+        "date": "09/2021 - 06/2024",
+        "degree": "Bachelors Degree of Computer Applications",
+        "institution": "Maharshi Dayanand University",
+        "description": 
+        "Bachelor of Computer Applications (BCA), Maharshi Dayanand University (MDU) — focused on programming, software development, and computer systems."
+      }
+    ],
+    "experience": [
+      
+      {
+      "date": "06/2025 - Present",
+      "role": "Python Developer Intern",
+      "company": "Netleaf Software",
+      "location": "Gurgaon, Haryana",
+      "description": "Worked on banking web projects (NetInsurance, Cover4You, XtraTrust) using Django and HTML. Modified models and templates to support dynamic, project-specific data structures. Collaborated with the team to integrate backend data with frontend views and enhance functionality."
+      },
+      {
+      "date": "08/2023 - 10/2023",
+      "role": "Artificial Intelligence Intern",
+      "company": "Corizo - Empowering Tomorrow's Leaders",
+      "location": "Noida, India",
+      "description":
+        "Gained hands-on experience in AI/ML processes, including data cleaning, EDA, feature engineering, and model development. Collaborated on 15+ projects, enhancing outcomes and improving model accuracy."
+    }
+    ],
+    "skills": [
+    { "name": "Python", "value": 60, "color": "color-1" },
+    { "name": "Javascript", "value": 80, "color": "color-2" },
+    { "name": "Node", "value": 70, "color": "color-3" },
+    { "name": "jQuery", "value": 85, "color": "color-4" },
+    { "name": "HTML5", "value": 95, "color": "color-5" },
+    { "name": "CSS3", "value": 90, "color": "color-6" },
+    { "name": "WordPress", "value": 70, "color": "color-1" },
+    { "name": "SEO", "value": 80, "color": "color-2" }
+  ],
+  "projects":[
+    { "img": "/images/project-4.jpg", "title": "Project 1", "subtitle": "Web Design", "link": "#" },
+    { "img": "/images/project-5.jpg", "title": "Project 2", "subtitle": "Web Design", "link": "#" },
+    { "img": "/images/project-1.jpg", "title": "Project 3", "subtitle": "Web Design", "link": "#" },
+    { "img": "/images/project-6.jpg", "title": "Project 4", "subtitle": "Web Design", "link": "#" },
+    { "img": "/images/project-2.jpg", "title": "Project 5", "subtitle": "Web Design", "link": "#" },
+    { "img": "/images/project-3.jpg", "title": "Project 6", "subtitle": "Web Design", "link": "#" }
+  ]
+}

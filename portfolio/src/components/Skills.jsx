@@ -1,25 +1,20 @@
 import { motion } from "framer-motion";
+import { useContext } from "react";
+import { DataContext } from "../context/DataContext";
 
-const skillsData = {
-  heading: {
-    title: "Skills",
-    subtitle: "My Skills",
-    description:
-      "Here you will find more information about my current skills mostly in terms of programming and technology",
-  },
-  skills: [
-    { name: "Python", value: 60, color: "color-1" },
-    { name: "Javascript", value: 30, color: "color-2" },
-    { name: "Photoshop", value: 90, color: "color-3" },
-    { name: "jQuery", value: 85, color: "color-4" },
-    { name: "HTML5", value: 95, color: "color-5" },
-    { name: "CSS3", value: 90, color: "color-6" },
-    { name: "WordPress", value: 70, color: "color-1" },
-    { name: "SEO", value: 80, color: "color-2" },
-  ],
-};
 
 function Skills() {
+  const {data} = useContext(DataContext)  
+  const skillsData = {
+    heading: {
+      title: "Skills",
+      subtitle: "My Skills",
+      description:
+        "Here you will find more information about my current skills mostly in terms of programming and technology",
+    },
+    skills: data.skills,
+  };
+
   return (
     <section className="ftco-section" id="skills-section">
       <div className="container">

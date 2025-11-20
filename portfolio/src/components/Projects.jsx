@@ -1,33 +1,29 @@
 import { motion } from "framer-motion";
-
-// Data object for projects
-const projectsData = {
-  heading: {
-    title: "Projects",
-    subtitle: "Our Projects",
-    description:
-      "Here you will find some of the personal projects that I created, each containing its own case study.",
-  },
-  projects: [
-    { img: "/images/project-4.jpg", title: "Project 1", subtitle: "Web Design", link: "#" },
-    { img: "/images/project-5.jpg", title: "Project 2", subtitle: "Web Design", link: "#" },
-    { img: "/images/project-1.jpg", title: "Project 3", subtitle: "Web Design", link: "#" },
-    { img: "/images/project-6.jpg", title: "Project 4", subtitle: "Web Design", link: "#" },
-    { img: "/images/project-2.jpg", title: "Project 5", subtitle: "Web Design", link: "#" },
-    { img: "/images/project-3.jpg", title: "Project 6", subtitle: "Web Design", link: "#" },
-    { img: "/images/project-5.jpg", title: "Project 7", subtitle: "Web Design", link: "#" },
-  ],
-};
-
-// Helper function for pattern-based layout
-const getRowPattern = (rowIndex, rowLength) => {
-  if (rowLength === 1) return ["col-12"];
-  return rowIndex % 2 === 0
-    ? ["col-md-4 col-12", "col-md-8 col-12"]
-    : ["col-md-8 col-12", "col-md-4 col-12"];
-};
+import { useContext } from "react";
+import { DataContext } from "../context/DataContext";
 
 function Projects() {
+
+  const {data} = useContext(DataContext)
+  // Data object for projects
+  const projectsData = {
+    heading: {
+      title: "Projects",
+      subtitle: "Our Projects",
+      description:
+        "Here you will find some of the personal projects that I created, each containing its own case study.",
+    },
+    projects: data.projects,
+  };
+
+  // Helper function for pattern-based layout
+  const getRowPattern = (rowIndex, rowLength) => {
+    if (rowLength === 1) return ["col-12"];
+    return rowIndex % 2 === 0
+      ? ["col-md-4 col-12", "col-md-8 col-12"]
+      : ["col-md-8 col-12", "col-md-4 col-12"];
+  };
+
   const rowVariants = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.2 } },

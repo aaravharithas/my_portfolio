@@ -3,35 +3,41 @@ import { FaTwitter, FaFacebookF, FaInstagram, FaHeart } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { HiOutlinePhone } from "react-icons/hi";
 import { GoLocation } from "react-icons/go";
+import { useContext } from "react";
+import { DataContext } from "../context/DataContext";
 
-// Footer data
-const footerData = {
-  about: {
-    title: "About",
-    description:
-      "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
-    social: [
-      { icon: FaTwitter, link: "https://twitter.com/" },
-      { icon: FaFacebookF, link: "https://facebook.com/" },
-      { icon: FaInstagram, link: "https://instagram.com/" },
-    ],
-  },
-  contact: {
-    title: "Have a Questions?",
-    items: [
-      { icon: GoLocation, text: "Gurgaon, Haryana 122001" },
-      { icon: HiOutlinePhone, text: "+91 9321 666 720", link: "tel://+919321666720" },
-      { icon: HiOutlineMail, text: "aaravharithas@gmail.com", link: "mailto:aaravharithas@gmail.com" },
-    ],
-  },
-  copyright: {
-    text: "Shoutout to whose template I copied | made with",
-    author: "Colorlib",
-    authorLink: "https://colorlib.com",
-  },
-};
 
 function Footer() {
+
+  const {data} = useContext(DataContext)
+    // Footer data
+  const footerData = {
+    about: {
+      title: "About",
+      description:
+        "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
+      social: [
+        { icon: FaTwitter, link: "https://twitter.com/" },
+        { icon: FaFacebookF, link: "https://facebook.com/" },
+        { icon: FaInstagram, link: "https://instagram.com/" },
+      ],
+    },
+    contact: {
+      title: "Have a Questions?",
+      items: [
+        { icon: GoLocation, text: data.Address + " " + data.ZipCode },
+        { icon: HiOutlinePhone, text: data.Phone, link: "tel://" + data.Phone },
+        { icon: HiOutlineMail, text: data.Email, link: "mailto:" + data.Email },
+      ],
+    },
+    copyright: {
+      text: "Shoutout to whose template I used | made with",
+      author: "Colorlib",
+      authorLink: "https://colorlib.com",
+    },
+  };
+
+
   const containerVariants = {
     hidden: {},
     show: { transition: { staggerChildren: 0.2 } },

@@ -1,9 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { DataContext } from "../context/DataContext";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const {data} = useContext(DataContext)
   const menuItems = [
     { href: "#home-about-section", label: "Home" },
     { href: "#resume-section", label: "Resume" },
@@ -59,7 +60,7 @@ function Navbar() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           whileHover={{ scale: 1.1, color: "#f5b700" }}
         >
-          Gaurav
+          {data.name.split(" ")[0]}
         </motion.a>
 
         {/* Hamburger Button */}

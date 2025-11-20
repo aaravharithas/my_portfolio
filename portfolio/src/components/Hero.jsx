@@ -1,30 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
 import { motion } from "framer-motion";
-
-const heroData = {
-  greeting: "Hello!",
-  name: "Gaurav Sharma",
-  title: "A Fullstack Backend Developer",
-  buttons: [
-    { label: "Hire me", href: "#", style: { backgroundColor: "#f5b700", color: "#000", fontWeight: 600, borderRadius: "50px", border: "none", padding: "12px 25px", marginRight: "10px" } },
-    { label: "My works", href: "#", style: { backgroundColor: "transparent", color: "#fff", fontWeight: 600, border: "2px solid #fff", borderRadius: "50px", padding: "12px 25px" } },
-  ],
-  about: {
-    heading: "About Me",
-    description: "Always learning, always building — because great software starts with curiosity and persistence.",
-    info: [
-      { label: "Name", value: "Gaurav Sharma" },
-      { label: "Date of birth", value: "August 11, 2002" },
-      { label: "Address", value: "Gurgaon, Haryana" },
-      { label: "Zip code", value: "122001" },
-      { label: "Email", value: "aaravharithas@gmail.com" },
-      { label: "Phone", value: "+91-9321-666-720" },
-    ],
-    cvLink: "#",
-  },
-};
+import { DataContext } from "../context/DataContext";
 
 function Hero() {
+
+  const {data} = useContext(DataContext)
+
+  const heroData = {
+    greeting: "Hello!",
+    name: data.name,
+    title: data.title,
+    buttons: [
+      { label: "Hire me", href: "#", style: { backgroundColor: "#f5b700", color: "#000", fontWeight: 600, borderRadius: "50px", border: "none", padding: "12px 25px", marginRight: "10px" } },
+      { label: "My works", href: "#", style: { backgroundColor: "transparent", color: "#fff", fontWeight: 600, border: "2px solid #fff", borderRadius: "50px", padding: "12px 25px" } },
+    ],
+    about: {
+      heading: "About Me",
+      description: "Always learning, always building — because great software starts with curiosity and persistence.",
+      info: [
+        { label: "Name", value: data.name },
+        { label: "Date of birth", value: data.DateOfBirth },
+        { label: "Address", value: data.Address },
+        { label: "Zip code", value: data.ZipCode },
+        { label: "Email", value: data.Email },
+        { label: "Phone", value: data.Phone },
+      ],
+      cvLink: data.cvLink,
+    },
+  };
   // Animation variants
   const fadeInUp = {
     hidden: { opacity: 0, y: 70 },
