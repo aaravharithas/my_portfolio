@@ -17,17 +17,17 @@ function Footer() {
       description:
         "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
       social: [
-        { icon: FaTwitter, link: "https://twitter.com/" },
-        { icon: FaFacebookF, link: "https://facebook.com/" },
-        { icon: FaInstagram, link: "https://instagram.com/" },
+        { icon: FaTwitter, link: data.social.twitter },
+        { icon: FaFacebookF, link: data.social.linkedin },
+        { icon: FaInstagram, link: data.social.instagram },
       ],
     },
     contact: {
       title: "Have a Questions?",
       items: [
-        { icon: GoLocation, text: data.Address + " " + data.ZipCode },
-        { icon: HiOutlinePhone, text: data.Phone, link: "tel://" + data.Phone },
-        { icon: HiOutlineMail, text: data.Email, link: "mailto:" + data.Email },
+        { icon: GoLocation, text: data.address + " " + data.zipCode },
+        { icon: HiOutlinePhone, text: data.phone, link: "tel://" + data.phone },
+        { icon: HiOutlineMail, text: data.email, link: "mailto:" + data.email },
       ],
     },
     copyright: {
@@ -57,7 +57,8 @@ function Footer() {
   return (
     <motion.footer
       className="ftco-footer ftco-section py-5"
-      style={{ backgroundColor: "#000", color: "#fff" }}
+      // style={{ backgroundColor: "#000", color: "#fff" }}
+      style={{color: "#fff",background:"#00000078" }}
       initial="hidden"
       whileInView="show"
       viewport={{ once: false }}

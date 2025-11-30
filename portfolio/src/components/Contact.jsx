@@ -15,10 +15,10 @@ const contactData = {
     description: "Feel free to contact me on these details",
   },
   items: [
-    { icon: "icon-map-signs", title: "Address", text: data.Address },
-    { icon: "icon-phone2", title: "Contact Number", text: data.Phone, link: "tel://" + data.Phone },
-    { icon: "icon-paper-plane", title: "Email Address", text: data.Email, link: "mailto:" + data.Email },
-    { icon: "icon-globe", title: "LinkedIn", text: data.username, link: data.social.Linkedin },
+    { icon: "icon-map-signs", title: "Address", text: data.address },
+    { icon: "icon-phone2", title: "Contact Number", text: data.phone, link: "tel://" + data.phone },
+    { icon: "icon-paper-plane", title: "Email Address", text: data.email, link: "mailto:" + data.email },
+    { icon: "icon-globe", title: "LinkedIn", text: data.username, link: data.social.linkedin },
   ],
 };
 

@@ -7,11 +7,43 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import {DataProvider} from "./context/DataContext"
+import MeshBackground from "./backgrounds/MeshBackground";
+import GlassBubblesBackground from "./backgrounds/GlassBubblesBackground";
+import SoftBlobsBackground from "./backgrounds/SoftBlobsBackground";
+import MagneticParticles from "./backgrounds/MagneticParticles";
+import RGBLightTrails from "./backgrounds/RGBLightTrails";
+import BlobDistortionBackground from "./backgrounds/BlobDistortionBackground";
+import CombinedBackground from "./backgrounds/CombinedBackground";
+import ParallaxGlassLayers from "./backgrounds/ParallaxGlassLayers";
+import CyberneticParticleNodes from "./backgrounds/CyberneticParticleNodes";
+import NeonParticleFlocks from "./backgrounds/NeonParticleFlocks";
+import NeonTriangulatedMesh from "./backgrounds/NeonTriangulatedMesh";
+import CombinedBackgroundLight from "./backgrounds/CombinedBackgroundLight";
+import CombinedBackgroundHeavy from "./backgrounds/CombinedBackgroundHeavy";
 
 function App() {
   return (
     <>
       <DataProvider>
+        {/* Background must render before content to sit behind it */}
+        {/* <MeshBackground/> */}
+        {/* <GlassBubblesBackground/> */}
+        {/* <BlobDistortionBackground/> */}
+        {/* <SoftBlobsBackground/> */}
+
+        {/* <RGBLightTrails/> */}
+        {/* <MagneticParticles/> */}
+        
+        {/* <CombinedBackgroundLight/> */}
+        <CombinedBackground/>
+        {/* <CombinedBackgroundHeavy/> */}
+        
+        {/* <ParallaxGlassLayers/> */}
+        
+        {/* <CyberneticParticleNodes/> */}
+        {/* <NeonParticleFlocks/> */}
+        {/* <NeonTriangulatedMesh/> */}
+        {/* It Ensure content draws above the canvas (z-index > 0 on nav / sections if needed) */}
         <Navbar />
         <Hero />
         <Resume />
@@ -20,11 +52,6 @@ function App() {
         <Contact />
         <Footer />
       </DataProvider>
-      {/* <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
-		<circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
-		<circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
-			stroke="#F96D00" />
-	</svg></div> */}
     </>
   );
 }

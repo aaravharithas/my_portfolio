@@ -11,19 +11,19 @@ function Hero() {
     name: data.name,
     title: data.title,
     buttons: [
-      { label: "Hire me", href: "#", style: { backgroundColor: "#f5b700", color: "#000", fontWeight: 600, borderRadius: "50px", border: "none", padding: "12px 25px", marginRight: "10px" } },
-      { label: "My works", href: "#", style: { backgroundColor: "transparent", color: "#fff", fontWeight: 600, border: "2px solid #fff", borderRadius: "50px", padding: "12px 25px" } },
+      { label: "Hire me", href: "contact-section", style: { backgroundColor: "#f5b700", color: "#000", fontWeight: 600, borderRadius: "50px", border: "none", padding: "12px 25px", marginRight: "10px" } },
+      { label: "My works", href: "#projects-section", style: { backgroundColor: "transparent", color: "#fff", fontWeight: 600, border: "2px solid #fff", borderRadius: "50px", padding: "12px 25px" } },
     ],
     about: {
       heading: "About Me",
       description: "Always learning, always building — because great software starts with curiosity and persistence.",
       info: [
         { label: "Name", value: data.name },
-        { label: "Date of birth", value: data.DateOfBirth },
-        { label: "Address", value: data.Address },
-        { label: "Zip code", value: data.ZipCode },
-        { label: "Email", value: data.Email },
-        { label: "Phone", value: data.Phone },
+        { label: "Date of birth", value: data.dob },
+        { label: "Address", value: data.address },
+        { label: "Zip code", value: data.zipCode },
+        { label: "Email", value: data.email },
+        { label: "Phone", value: data.phone },
       ],
       cvLink: data.cvLink,
     },
@@ -121,7 +121,7 @@ function Hero() {
               <div className="counter-wrap d-flex mt-md-3">
                 <div className="text">
                   <p>
-                    <a href={heroData.about.cvLink} className="btn btn-primary py-3 px-3">
+                    <a href={heroData.about.cvLink} target="_blank" className="btn btn-primary py-3 px-3">
                       Download CV
                     </a>
                   </p>

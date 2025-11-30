@@ -11,7 +11,7 @@ function Navbar() {
     { href: "#skills-section", label: "Skills" },
     { href: "#projects-section", label: "Projects" },
     { href: "#contact-section", label: "Contact" },
-    { href: "mlform.html", label: "Ml algorithm" },
+    // { href: "mlform.html", label: "Ml algorithm" },
   ];
 
   const desktopItemVariants = {
@@ -60,7 +60,7 @@ function Navbar() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           whileHover={{ scale: 1.1, color: "#f5b700" }}
         >
-          {data.name.split(" ")[0]}
+          {data.firstName}
         </motion.a>
 
         {/* Hamburger Button */}

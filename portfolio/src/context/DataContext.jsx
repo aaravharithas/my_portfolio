@@ -11,7 +11,7 @@ export function DataProvider({ children }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch("https://myapi.pythonanywhere.com/");
+        const res = await fetch("https://portfolioapi.pythonanywhere.com/portfolio/aaravharithas/");
         if (!res.ok) throw new Error("API error");
         const apiData = await res.json();
         setData(apiData);
