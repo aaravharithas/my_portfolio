@@ -1,0 +1,477 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Plus Jakarta Sans", Inter, system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Bolder typography – bump font weights project-wide */
+.font-medium {
+  font-weight: 600;
+}
+.font-semibold {
+  font-weight: 700;
+}
+.font-bold {
+  font-weight: 800;
+}
+.font-extrabold {
+  font-weight: 800;
+}
+
+html {
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  width: 100%;
+  height: 100%;
+  overflow-y: auto; /* Allow vertical scrolling on html - single scrollbar */
+  /* Use scrollbar-gutter to reserve space and prevent layout shift */
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth; /* Smooth scroll for anchor links (#section) */
+}
+
+body {
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overflow-y: visible; /* Don't create scrollbar on body - html handles it */
+  width: 100%;
+  height: auto; /* Let height be determined by content */
+  min-height: 100vh; /* Minimum full viewport height */
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Plus Jakarta Sans", Inter, "SF Pro Display", system-ui, sans-serif;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.3s, color 0.3s;
+  margin: 0;
+  padding: 0;
+  position: relative; /* Ensure proper stacking context */
+}
+
+#root {
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: visible; /* Don't create scrollbar - html handles it */
+  position: relative;
+}
+
+/* Dark mode styles - CSS variables are updated dynamically via ThemeContext */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+/* Body padding for navbar - responsive */
+body {
+  padding-top: 4rem; /* 64px - mobile */
+}
+
+@media (min-width: 640px) {
+  body {
+    padding-top: 5rem; /* 80px - tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    padding-top: 6rem; /* 96px - laptop */
+  }
+}
+
+@media (min-width: 1280px) {
+  body {
+    padding-top: 7rem; /* 112px - desktop */
+  }
+}
+
+/* Hide default cursor when custom cursor (AppleCursor) is active */
+body.cursor-hidden,
+body.cursor-hidden * {
+  cursor: none !important;
+}
+
+/* Gradient Text Styles - Infinite color loop */
+.gradient-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 400% 100%;
+  background-position: 0% 50%;
+  animation: gradient-text-flow 16s linear infinite;
+}
+
+@keyframes gradient-text-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 400% 50%;
+  }
+}
+
+/* Light: spectrum blue → violet → pink → rose → amber → emerald → teal → blue (seamless loop) */
+.gradient-text-infinite {
+  background-image: linear-gradient(
+    90deg,
+    #2563eb,
+    #6366f1,
+    #8b5cf6,
+    #a855f7,
+    #d946ef,
+    #ec4899,
+    #f43f5e,
+    #f97316,
+    #eab308,
+    #22c55e,
+    #14b8a6,
+    #06b6d4,
+    #2563eb
+  );
+}
+
+/* Dark: same spectrum, slightly brighter tints for contrast */
+.dark .gradient-text-infinite {
+  background-image: linear-gradient(
+    90deg,
+    #60a5fa,
+    #818cf8,
+    #a78bfa,
+    #c084fc,
+    #e879f9,
+    #f472b6,
+    #fb7185,
+    #fb923c,
+    #facc15,
+    #4ade80,
+    #2dd4bf,
+    #22d3ee,
+    #60a5fa
+  );
+}
+
+/* Same infinite gradient for backgrounds (progress bar, etc.) */
+.bg-gradient-infinite {
+  background-size: 400% 100%;
+  background-position: 0% 50%;
+  animation: gradient-text-flow 16s linear infinite;
+}
+.bg-gradient-infinite {
+  background-image: linear-gradient(
+    90deg,
+    #2563eb,
+    #6366f1,
+    #8b5cf6,
+    #a855f7,
+    #d946ef,
+    #ec4899,
+    #f43f5e,
+    #f97316,
+    #eab308,
+    #22c55e,
+    #14b8a6,
+    #06b6d4,
+    #2563eb
+  );
+}
+.dark .bg-gradient-infinite {
+  background-image: linear-gradient(
+    90deg,
+    #60a5fa,
+    #818cf8,
+    #a78bfa,
+    #c084fc,
+    #e879f9,
+    #f472b6,
+    #fb7185,
+    #fb923c,
+    #facc15,
+    #4ade80,
+    #2dd4bf,
+    #22d3ee,
+    #60a5fa
+  );
+}
+
+/* Cursor blob: same infinite gradient when idle (default state) */
+.cursor-blob-gradient {
+  background-size: 400% 100%;
+  background-position: 0% 50%;
+  animation: gradient-text-flow 16s linear infinite;
+}
+.cursor-blob-gradient {
+  background-image: linear-gradient(
+    90deg,
+    #2563eb,
+    #6366f1,
+    #8b5cf6,
+    #a855f7,
+    #d946ef,
+    #ec4899,
+    #f43f5e,
+    #f97316,
+    #eab308,
+    #22c55e,
+    #14b8a6,
+    #06b6d4,
+    #2563eb
+  );
+}
+.dark .cursor-blob-gradient {
+  background-image: linear-gradient(
+    90deg,
+    #60a5fa,
+    #818cf8,
+    #a78bfa,
+    #c084fc,
+    #e879f9,
+    #f472b6,
+    #fb7185,
+    #fb923c,
+    #facc15,
+    #4ade80,
+    #2dd4bf,
+    #22d3ee,
+    #60a5fa
+  );
+}
+
+/* Scroll fade using mask-image - modern approach for glassmorphic edge fade */
+/* The mask-image is applied directly to scroll containers via inline styles */
+/* This provides better performance and cleaner integration with glassmorphic cards */
+
+/* Scroll snap */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-stop: always;
+  scroll-padding: 0;
+  overscroll-behavior-x: contain;
+}
+
+.scroll-snap-start {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Smooth scrolling for education and projects sections */
+.education-scrollbar-hide,
+.projects-scrollbar-hide {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scroll-snap-stop: always;
+  overscroll-behavior-x: contain;
+  /* Performance optimizations */
+  will-change: scroll-position;
+  transform: translateZ(0); /* GPU acceleration */
+  backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+/* Performance optimizations for glassmorphic cards */
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .glass-card,
+  [class*="glass"] {
+    will-change: transform, backdrop-filter;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+}
+
+/* Floating dots background animation */
+@keyframes float-dot {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translate(8px, -12px) scale(1.1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-6px, -8px) scale(0.95);
+    opacity: 0.7;
+  }
+  75% {
+    transform: translate(-10px, 6px) scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-dot {
+    animation: none !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .education-scrollbar-hide,
+  .projects-scrollbar-hide {
+    scroll-behavior: auto;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile performance optimizations */
+@media (max-width: 639px) {
+  .education-scrollbar-hide,
+  .projects-scrollbar-hide {
+    /* Reduce compositing layers on mobile */
+    will-change: auto;
+  }
+}
+
+/* Responsive Typography Utilities */
+.text-responsive-xs {
+  font-size: clamp(0.75rem, 2vw, 0.875rem); /* 12px - 14px */
+}
+
+.text-responsive-sm {
+  font-size: clamp(0.875rem, 2.5vw, 1rem); /* 14px - 16px */
+}
+
+.text-responsive-base {
+  font-size: clamp(1rem, 2.5vw, 1.125rem); /* 16px - 18px */
+}
+
+.text-responsive-lg {
+  font-size: clamp(1.125rem, 3vw, 1.25rem); /* 18px - 20px */
+}
+
+.text-responsive-xl {
+  font-size: clamp(1.25rem, 3.5vw, 1.5rem); /* 20px - 24px */
+}
+
+.text-responsive-2xl {
+  font-size: clamp(1.5rem, 4vw, 2rem); /* 24px - 32px */
+}
+
+.text-responsive-3xl {
+  font-size: clamp(1.875rem, 5vw, 2.5rem); /* 30px - 40px */
+}
+
+.text-responsive-4xl {
+  font-size: clamp(2.25rem, 6vw, 3rem); /* 36px - 48px */
+}
+
+/* Responsive Container Max-Widths */
+.container-responsive {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-responsive {
+    max-width: 640px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-responsive {
+    max-width: 1024px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-responsive {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container-responsive {
+    max-width: 1536px;
+  }
+}
+
+/* Glassmorphic gradient overlays for enhanced depth */
+.glass-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0.3;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  mix-blend-mode: overlay;
+}
+
+.dark .glass-gradient-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+}
+
+/* Project card style – black/white theme shadows and hover ring */
+.project-card {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.08),
+    0 10px 24px -4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.dark .project-card {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.35),
+    0 10px 24px -4px rgba(0, 0, 0, 0.4);
+}
+.project-card-content {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+.dark .project-card-content {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Enhanced focus states for accessibility */
+.glass-card:focus-visible,
+[class*="glass"]:focus-visible {
+  outline: 2px solid rgba(96, 165, 250, 0.6);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2);
+}

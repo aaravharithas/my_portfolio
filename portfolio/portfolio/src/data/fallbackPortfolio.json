@@ -1,0 +1,74 @@
+{
+  "name": "Gaurav Sharma",
+  "firstName": "Gaurav",
+  "lastName": "Sharma",
+  "title": "A Fullstack Backend Developer",
+  "username": "aaravharithas",
+  "dob": "August 11, 2002",
+  "address": "Gurgaon, Haryana",
+  "zipCode": "122001",
+  "email": "aaravharithas@gmail.com",
+  "phone": "9321666720",
+  "aboutMe": "I am a fullstack python developer. mainly focused on python.",
+  "profileImage": "https://portfolioapi.pythonanywhere.com/media/user/profile_pics/default.jpg",
+  "cvLink": "https://portfolioapi.pythonanywhere.com/media/user/resume/default.pdf",
+  "social": {
+    "linkedin": "https://www.linkedin.com/in/aaravharithas/",
+    "instagram": "https://www.instagram.com/",
+    "twitter": "https://www.twitter.com/"
+  },
+  "education": [
+    {
+      "startDate": "April 8, 2025",
+      "endDate": "November 8, 2025",
+      "degree": "Python Full Stack Course",
+      "institution": "Ducat, Gurgaon",
+      "description": "Comprehensive Python Full Stack course covering backend development with Django, frontend integration, and full-stack web application development."
+    },
+    {
+      "startDate": "September 24, 2021",
+      "endDate": "July 7, 2024",
+      "degree": "Bachelor of Computer Applications",
+      "institution": "Maharshi Dayanand University",
+      "description": "Bachelor of Computer Applications (BCA), Maharshi Dayanand University (MDU)—focused on programming, software development, and computer systems."
+    }
+  ],
+  "experience": [
+    {
+      "startDate": "July 1, 2025",
+      "endDate": "Present",
+      "role": "Python Developer Intern",
+      "company": "Netleaf Software",
+      "location": "Gurgaon sec-49",
+      "description": "Worked on live banking project. Mainly fetching data from backend and show it to the frontend."
+    },
+    {
+      "startDate": "August 1, 2023",
+      "endDate": "October 1, 2023",
+      "role": "Artificial Intelligence Intern",
+      "company": "Corizo - Empowering Tomorrow's Leaders",
+      "location": "Noida, India",
+      "description": "Gained hands-on experience in AI/ML processes, including data cleaning, EDA, feature engineering, and model development. Collaborated on 15+ projects, enhancing outcomes and improving model accuracy."
+    }
+  ],
+  "skills": [
+    { "name": "Python", "value": 86, "category": null },
+    { "name": "Google ADK", "value": 80, "category": null },
+    { "name": "Javascript", "value": 80, "category": null },
+    { "name": "Flask", "value": 70, "category": null },
+    { "name": "Django", "value": 80, "category": null },
+    { "name": "Node.js", "value": 75, "category": null },
+    { "name": "React", "value": 67, "category": null }
+  ],
+  "projects": [
+    {
+      "image": "https://portfolioapi.pythonanywhere.com/media/projects/projects_img/default.jpg",
+      "title": "Demo Hotels API",
+      "link": "https://demohotelsapi.pythonanywhere.com/",
+      "github": "https://github.com/aaravharithas/demohotels",
+      "metadata": "simple hotel api",
+      "description": "A simple Hotel Management API built using Django and Django REST Framework (DRF).",
+      "tech_stack": ["Python", "Django", "DRF", "HTML/CSS"]
+    }
+  ]
+}
