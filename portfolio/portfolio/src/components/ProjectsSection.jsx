@@ -399,7 +399,7 @@ function ProjectsSection() {
                               >
                                 {project.title}
                               </span>
-                              <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 gradient-text gradient-text-infinite">
+                              <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white">
                                 {project.title}
                               </span>
                             </span>

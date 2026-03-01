@@ -1,6 +1,8 @@
 import fallbackPortfolio from '../data/fallbackPortfolio.json';
 
-const API_BASE_URL = 'https://portfolioapi.pythonanywhere.com/portfolio/aaravharithas/';
+const API_BASE_URL = import.meta.env.DEV
+  ? '/api/portfolio/aaravharithas/'
+  : 'https://portfolioapi.pythonanywhere.com/portfolio/aaravharithas/';
 
 export const fetchPortfolioData = async () => {
   try {
