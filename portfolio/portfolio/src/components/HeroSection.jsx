@@ -30,7 +30,7 @@ const greetings = [
   "నమస్కారం", // Telugu
 ];
 
-export default function HeroSection() {
+function HeroSection() {
   const { theme: themeMode } = useTheme();
   const { portfolioData } = usePortfolio();
   const [currentGreeting, setCurrentGreeting] = useState(0);
@@ -186,3 +186,5 @@ export default function HeroSection() {
     </section>
   );
 }
+
+export default React.memo(HeroSection);

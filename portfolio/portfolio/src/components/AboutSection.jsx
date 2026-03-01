@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { usePortfolio } from "../context/PortfolioContext.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
 
-export default function AboutSection() {
+function AboutSection() {
   const { portfolioData, loading } = usePortfolio();
   const { theme: themeMode } = useTheme();
 
@@ -37,6 +37,7 @@ export default function AboutSection() {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: "easeOut" }}
+        loading="lazy"
         className="w-40 h-auto mb-4 md:mb-0 rounded-full object-cover"
         whileHover={{ rotateY: 18 }}
         whileTap={{ rotateY: -10 }}
@@ -70,3 +71,5 @@ export default function AboutSection() {
     </motion.section>
   );
 }
+
+export default React.memo(AboutSection);

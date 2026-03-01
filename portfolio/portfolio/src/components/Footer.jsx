@@ -2,7 +2,7 @@ import React from "react";
 import { usePortfolio } from "../context/PortfolioContext.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
 
-export default function Footer() {
+function Footer() {
   const { theme: themeMode } = useTheme();
   const { portfolioData } = usePortfolio();
   const name = portfolioData?.name ?? "";
@@ -23,3 +23,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+export default React.memo(Footer);

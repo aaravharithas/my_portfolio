@@ -6,7 +6,7 @@ import DarkModeToggle from "./DarkModeToggle.jsx";
 import MobileWelcome from "./MobileWelcome.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { glassmorphic } from "../config/glassmorphic.js";
-import { getGlassStyle, getLiquidGlassGradient } from "../utils/themeUtils.js";
+import { getGlassStyle } from "../utils/themeUtils.js";
 import { theme } from "../config/theme.js";
 
 // Order matches portfolio: About → Education → Tools (Skills) → Projects → Contact
@@ -159,58 +159,12 @@ export default function Navbar({ variant = "desktop" }) {
           maxWidth: '100%',
         }}
       >
-        {/* Animated background gradient - theme-aware */}
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            opacity: themeMode === 'light' ? 0.4 : 0.3,
-          }}
-          animate={{
-            background: [
-              getLiquidGlassGradient('gradient1', themeMode),
-              getLiquidGlassGradient('gradient2', themeMode),
-              getLiquidGlassGradient('gradient3', themeMode),
-              getLiquidGlassGradient('gradient1', themeMode),
-            ]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
+        {/* Background gradient - CSS-driven (compositor thread, no JS cost) */}
+        <div
+          aria-hidden
+          className={`absolute inset-0 ${themeMode === 'light' ? 'liquid-glass-anim-light' : 'liquid-glass-anim'}`}
+          style={{ opacity: themeMode === 'light' ? 0.4 : 0.3 }}
         />
-
-        {/* Floating particles in navbar - theme-aware colors */}
-        <div className="absolute inset-0 overflow-hidden rounded-3xl">
-          {[...Array(4)].map((_, i) => {
-            // Use colored particles for light mode, white for dark mode
-            const particleColors = themeMode === 'light' 
-              ? ['rgba(96,165,250,0.4)', 'rgba(167,139,250,0.4)', 'rgba(244,114,182,0.4)', 'rgba(96,165,250,0.4)']
-              : ['rgba(255,255,255,0.2)', 'rgba(255,255,255,0.2)', 'rgba(255,255,255,0.2)', 'rgba(255,255,255,0.2)'];
-            return (
-              <motion.div
-                key={i}
-                className="absolute w-1 h-1 rounded-full"
-                style={{
-                  left: `${15 + i * 20}%`,
-                  top: `${20 + (i % 2) * 60}%`,
-                  backgroundColor: particleColors[i % particleColors.length],
-                }}
-                animate={{
-                  y: [-5, -15, -5],
-                  opacity: themeMode === 'light' ? [0.4, 0.8, 0.4] : [0.2, 0.6, 0.2],
-                  scale: [1, 1.5, 1],
-                }}
-                transition={{
-                  duration: 3 + i * 0.5,
-                  repeat: Infinity,
-                  delay: i * 0.3,
-                  ease: "easeInOut"
-                }}
-              />
-            );
-          })}
-        </div>
 
         {/* Siri-style orb for desktop (left side) - exact same as mobile with click animation */}
         <div className={`${isDesktop ? "flex" : "hidden"} items-center relative z-10`}>
@@ -300,8 +254,8 @@ export default function Navbar({ variant = "desktop" }) {
                   opacity: 0.6,
                 }}
                 transition={{
-                  duration: desktopSiriActive ? 1.5 : 2,
-                  repeat: Infinity,
+                  duration: 1.5,
+                  repeat: desktopSiriActive ? Infinity : 0,
                   repeatType: 'reverse',
                   ease: "easeInOut"
                 }}
@@ -332,24 +286,20 @@ export default function Navbar({ variant = "desktop" }) {
                 />
               ))}
 
-              {/* Rotating gradient overlay - same as mobile */}
-              <motion.div
-                className="absolute inset-0 rounded-full"
-                style={{
-                  background: 'conic-gradient(from 0deg, transparent, rgba(255,255,255,0.2), transparent)',
-                }}
-                animate={{
-                  rotate: desktopSiriActive ? [0, 360] : [0, 180, 360],
-                }}
-                transition={{
-                  duration: desktopSiriActive ? 2 : 4,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              />
+              {/* Rotating gradient overlay - only when active */}
+              {desktopSiriActive && (
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: 'conic-gradient(from 0deg, transparent, rgba(255,255,255,0.2), transparent)',
+                  }}
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                />
+              )}
             </motion.div>
             {typeof window !== 'undefined' && (
-              <audio ref={siriAudioRef} src="/siri-activate.mp3" preload="auto" />
+              <audio ref={siriAudioRef} src="/siri-activate.mp3" preload="none" />
             )}
           </button>
         </div>
@@ -425,37 +375,6 @@ export default function Navbar({ variant = "desktop" }) {
                     aria-hidden
                   />
                 )}
-
-                {/* Floating micro-particles on hover - theme-aware */}
-                <div className={`absolute inset-0 overflow-hidden rounded-2xl transition-opacity duration-300 ${isActive ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'}`}>
-                  {[...Array(3)].map((_, i) => {
-                    // Use colored particles for light mode, white for dark mode
-                    const hoverParticleColor = themeMode === 'light'
-                      ? ['rgba(96,165,250,0.6)', 'rgba(167,139,250,0.6)', 'rgba(244,114,182,0.6)'][i % 3]
-                      : 'rgba(255,255,255,0.6)';
-                    return (
-                      <motion.div
-                        key={i}
-                        className="absolute w-0.5 h-0.5 rounded-full"
-                        style={{
-                          left: `${30 + i * 20}%`,
-                          top: `${40 + (i % 2) * 20}%`,
-                          backgroundColor: hoverParticleColor,
-                        }}
-                        animate={{
-                          y: [-3, -8, -3],
-                          opacity: themeMode === 'light' ? [0.5, 0.9, 0.5] : [0.3, 0.8, 0.3],
-                        }}
-                        transition={{
-                          duration: 1.5 + i * 0.2,
-                          repeat: Infinity,
-                          delay: i * 0.1,
-                          ease: "easeInOut"
-                        }}
-                      />
-                    );
-                  })}
-                </div>
 
                 <span className="relative z-10">{link.name}</span>
               </motion.button>
@@ -558,8 +477,8 @@ export default function Navbar({ variant = "desktop" }) {
                   opacity: 0.6,
                 }}
                 transition={{
-                  duration: siriActive ? 1.5 : 2,
-                  repeat: Infinity,
+                  duration: 1.5,
+                  repeat: siriActive ? Infinity : 0,
                   repeatType: 'reverse',
                   ease: "easeInOut"
                 }}
@@ -590,24 +509,20 @@ export default function Navbar({ variant = "desktop" }) {
                 />
               ))}
 
-              {/* Rotating gradient overlay */}
-              <motion.div
-                className="absolute inset-0 rounded-full"
-                style={{
-                  background: 'conic-gradient(from 0deg, transparent, rgba(255,255,255,0.2), transparent)',
-                }}
-                animate={{
-                  rotate: siriActive ? [0, 360] : [0, 180, 360],
-                }}
-                transition={{
-                  duration: siriActive ? 2 : 4,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              />
+              {/* Rotating gradient overlay - only when active */}
+              {siriActive && (
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: 'conic-gradient(from 0deg, transparent, rgba(255,255,255,0.2), transparent)',
+                  }}
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                />
+              )}
             </motion.div>
             {typeof window !== 'undefined' && (
-              <audio ref={siriAudioRef} src="/siri-activate.mp3" preload="auto" />
+              <audio ref={siriAudioRef} src="/siri-activate.mp3" preload="none" />
             )}
           </button>
         </div>

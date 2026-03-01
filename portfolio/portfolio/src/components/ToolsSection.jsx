@@ -90,7 +90,7 @@ const DefaultIconSvg = ({ className, style }) => (
   </svg>
 );
 
-export default function ToolsSection() {
+function ToolsSection() {
   const { portfolioData, loading } = usePortfolio();
   const { theme: themeMode } = useTheme();
   // Track which skills had their icon fail to load (by skill name) so we show default icon
@@ -195,3 +195,5 @@ export default function ToolsSection() {
     </motion.section>
   );
 }
+
+export default React.memo(ToolsSection);

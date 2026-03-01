@@ -44,7 +44,7 @@ const itemVariants = {
   },
 };
 
-export default function ProjectsSection() {
+function ProjectsSection() {
   const { theme: themeMode } = useTheme();
   const { portfolioData, loading } = usePortfolio();
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,7 +56,7 @@ export default function ProjectsSection() {
       title: project.title || "Untitled Project",
       tech: project.tech_stack || [],
       description:
-        project.discription || project.description || "No description available.",
+        project.description || "No description available.",
       image: project.image || "/images/default-project.png",
       link: project.link || null,
       github: project.github || null,
@@ -183,12 +183,11 @@ export default function ProjectsSection() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        {/* Rotating gradient ring - same as theme toggle */}
-                        <motion.div
+                        {/* Static gradient ring for active page indicator */}
+                        <div
                           className="absolute inset-0 rounded-full"
                           style={{ background: conicRingGradient }}
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                          aria-hidden
                         />
                         {/* Opaque center mask so only the ring shows - 3px ring width */}
                         <div
@@ -356,6 +355,7 @@ export default function ProjectsSection() {
                           <motion.img
                             src={project.image}
                             alt={project.title}
+                            loading="lazy"
                             className="w-full h-full object-cover transition-transform duration-500"
                             whileHover={{ scale: 1.1 }}
                             onError={(e) => {
@@ -504,3 +504,5 @@ export default function ProjectsSection() {
     </motion.section>
   );
 }
+
+export default React.memo(ProjectsSection);

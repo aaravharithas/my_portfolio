@@ -230,7 +230,7 @@ export default function LoadingScreen({ onComplete, dataReady = false }) {
             </motion.div>
           </button>
           {typeof window !== 'undefined' && (
-            <audio ref={siriAudioRef} src="/siri-activate.mp3" preload="auto" />
+            <audio ref={siriAudioRef} src="/siri-activate.mp3" preload="none" />
           )}
         </motion.div>
 

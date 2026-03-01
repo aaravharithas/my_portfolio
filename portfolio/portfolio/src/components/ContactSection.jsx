@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { usePortfolio } from "../context/PortfolioContext.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { glassmorphic } from "../config/glassmorphic.js";
-import { getGlassStyle, getGlassBackground, getGlassBorder, getLiquidGlassGradient } from "../utils/themeUtils.js";
+import { getGlassStyle, getGlassBackground, getGlassBorder } from "../utils/themeUtils.js";
 import { theme } from "../config/theme.js";
 
 // Social icons component that uses centralized theme
@@ -45,9 +45,29 @@ const MailIcon = () => (
   </svg>
 );
 
-export default function ContactSection() {
+function ContactSection() {
   const { theme: themeMode } = useTheme();
   const { portfolioData, loading } = usePortfolio();
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formStatus, setFormStatus] = useState('idle'); // 'idle' | 'sent'
+
+  const handleChange = (e) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const recipientEmail = portfolioData?.email || '';
+    const subject = encodeURIComponent(`Message from ${formData.name}`);
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+    );
+    if (recipientEmail) {
+      window.location.href = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
+    }
+    setFormStatus('sent');
+    setFormData({ name: '', email: '', message: '' });
+  };
 
   // Build socials array from API data
   const socials = [];
@@ -111,62 +131,19 @@ export default function ContactSection() {
         style={{
           ...getGlassStyle({ background: 'form', border: 'form', blur: 'md', shadow: 'glass', theme: themeMode }),
         }}
-        onSubmit={e => e.preventDefault()}
+        onSubmit={handleSubmit}
       >
-        {/* Animated background gradient - same as navbar */}
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            opacity: themeMode === 'light' ? 0.4 : 0.3,
-          }}
-          animate={{
-            background: [
-              getLiquidGlassGradient('gradient1', themeMode),
-              getLiquidGlassGradient('gradient2', themeMode),
-              getLiquidGlassGradient('gradient3', themeMode),
-              getLiquidGlassGradient('gradient1', themeMode),
-            ]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
+        {/* Background gradient - CSS-driven (compositor thread, no JS cost) */}
+        <div
+          aria-hidden
+          className={`absolute inset-0 ${themeMode === 'light' ? 'liquid-glass-anim-light' : 'liquid-glass-anim'}`}
+          style={{ opacity: themeMode === 'light' ? 0.4 : 0.3 }}
         />
-
-        {/* Floating particles - same as navbar */}
-        <div className="absolute inset-0 overflow-hidden rounded-2xl">
-          {[...Array(4)].map((_, i) => {
-            // Use colored particles for light mode, white for dark mode
-            const particleColors = themeMode === 'light' 
-              ? ['rgba(96,165,250,0.4)', 'rgba(167,139,250,0.4)', 'rgba(244,114,182,0.4)', 'rgba(96,165,250,0.4)']
-              : ['rgba(255,255,255,0.2)', 'rgba(255,255,255,0.2)', 'rgba(255,255,255,0.2)', 'rgba(255,255,255,0.2)'];
-            return (
-              <motion.div
-                key={i}
-                className="absolute w-1 h-1 rounded-full"
-                style={{
-                  left: `${15 + i * 20}%`,
-                  top: `${20 + (i % 2) * 60}%`,
-                  backgroundColor: particleColors[i % particleColors.length],
-                }}
-                animate={{
-                  y: [-5, -15, -5],
-                  opacity: themeMode === 'light' ? [0.4, 0.8, 0.4] : [0.2, 0.6, 0.2],
-                  scale: [1, 1.5, 1],
-                }}
-                transition={{
-                  duration: 3 + i * 0.5,
-                  repeat: Infinity,
-                  delay: i * 0.3,
-                  ease: "easeInOut"
-                }}
-              />
-            );
-          })}
-        </div>
         <input
           type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
           placeholder="Your Name"
           className="px-3 py-2 sm:px-4 sm:py-3 rounded-lg shadow-glass focus:outline-none transition-all relative z-10 text-sm sm:text-base"
           style={{
@@ -186,6 +163,9 @@ export default function ContactSection() {
         />
         <input
           type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
           placeholder="Your Email"
           className="px-4 py-3 rounded-lg shadow-glass focus:outline-none transition-all relative z-10"
           style={{
@@ -203,6 +183,9 @@ export default function ContactSection() {
           required
         />
         <textarea
+          name="message"
+          value={formData.message}
+          onChange={handleChange}
           placeholder="Your Message"
           className="px-3 py-2 sm:px-4 sm:py-3 rounded-lg shadow-glass focus:outline-none min-h-[80px] sm:min-h-[100px] transition-all text-sm sm:text-base"
           style={{
@@ -233,8 +216,20 @@ export default function ContactSection() {
             e.currentTarget.style.background = getGlassBackground('button', themeMode);
           }}
         >
-          <span className="gradient-text gradient-text-infinite">Send Message</span>
+          <span className="gradient-text gradient-text-infinite">
+            {formStatus === 'sent' ? 'Message Sent ✓' : 'Send Message'}
+          </span>
         </button>
+        {formStatus === 'sent' && (
+          <motion.p
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm text-center relative z-10"
+            style={{ color: themeMode === 'light' ? '#16a34a' : '#4ade80' }}
+          >
+            Thanks! Your email client should open with your message pre-filled.
+          </motion.p>
+        )}
       </motion.form>
 
       {/* Social Media Icons - Clean Layout Without Background */}
@@ -307,3 +302,5 @@ export default function ContactSection() {
     </motion.section>
   );
 }
+
+export default React.memo(ContactSection);

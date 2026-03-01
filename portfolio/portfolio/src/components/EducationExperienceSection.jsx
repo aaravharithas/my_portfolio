@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { usePortfolio } from "../context/PortfolioContext.jsx";
 import { glassmorphic } from "../config/glassmorphic.js";
-import { getGlassBackground, getGlassBorder, getGlassStyle, getDeviceAwareBlurValue, getLiquidGlassGradient } from "../utils/themeUtils.js";
+import { getGlassBackground, getGlassBorder, getGlassStyle, getDeviceAwareBlurValue } from "../utils/themeUtils.js";
 import BounceCard from "./react-bits/BounceCard.jsx";
 import { theme } from "../config/theme.js";
 import { getDeviceType, isTouchDevice, supportsBackdropFilter } from "../utils/responsiveUtils.js";
 
-export default function EducationExperienceSection() {
+function EducationExperienceSection() {
   const { theme: themeMode } = useTheme();
   const { portfolioData, loading } = usePortfolio();
   const [activeTab, setActiveTab] = useState(0);
@@ -86,54 +86,12 @@ export default function EducationExperienceSection() {
               }
             }}
           >
-            {/* Liquid effect background - only show on active tab */}
+            {/* Background gradient on active tab - CSS-driven */}
             {activeTab === idx && (
-              <motion.div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"
-                style={{
-                  background: glassmorphic.liquidGlass.gradients.gradient1,
-                }}
-                animate={{
-                  background: [
-                    glassmorphic.liquidGlass.gradients.gradient1,
-                    glassmorphic.liquidGlass.gradients.gradient2,
-                    glassmorphic.liquidGlass.gradients.gradient3,
-                    glassmorphic.liquidGlass.gradients.gradient1,
-                  ]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
+              <div
+                aria-hidden
+                className={`absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${themeMode === 'light' ? 'liquid-glass-anim-light' : 'liquid-glass-anim'}`}
               />
-            )}
-            
-            {/* Floating particles - only show on active tab */}
-            {activeTab === idx && (
-              <div className="absolute inset-0 overflow-hidden rounded-full">
-                {[...Array(4)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-1 h-1 bg-white/40 rounded-full"
-                    style={{
-                      left: `${20 + i * 15}%`,
-                      top: `${30 + (i % 2) * 40}%`,
-                    }}
-                    animate={{
-                      y: [-10, -20, -10],
-                      opacity: [0.3, 0.8, 0.3],
-                      scale: [1, 1.2, 1],
-                    }}
-                    transition={{
-                      duration: 2 + i * 0.3,
-                      repeat: Infinity,
-                      delay: i * 0.2,
-                      ease: "easeInOut"
-                    }}
-                  />
-                ))}
-              </div>
             )}
             
             <span className="relative z-10">
@@ -240,18 +198,10 @@ export default function EducationExperienceSection() {
                           boxShadow: themeMode === 'light' ? '0 1px 2px rgba(0,0,0,0.04)' : '0 1px 2px rgba(0,0,0,0.15)',
                         }}
                       >
-                        <motion.div
-                          className="absolute inset-0 rounded-lg"
+                        <div
+                          aria-hidden
+                          className={`absolute inset-0 rounded-lg ${themeMode === 'light' ? 'liquid-glass-anim-light' : 'liquid-glass-anim'}`}
                           style={{ opacity: themeMode === 'light' ? 0.4 : 0.3 }}
-                          animate={{
-                            background: [
-                              getLiquidGlassGradient('gradient1', themeMode),
-                              getLiquidGlassGradient('gradient2', themeMode),
-                              getLiquidGlassGradient('gradient3', themeMode),
-                              getLiquidGlassGradient('gradient1', themeMode),
-                            ],
-                          }}
-                          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
                         />
                         <span
                           className="relative z-10 block text-xs sm:text-sm px-2.5 py-1 sm:px-3 sm:py-1.5 font-medium"
@@ -322,3 +272,5 @@ export default function EducationExperienceSection() {
     </motion.section>
   );
 }
+
+export default React.memo(EducationExperienceSection);
