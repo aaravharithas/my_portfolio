@@ -53,42 +53,26 @@ export default function Navbar({ variant = "desktop" }) {
     }
   }, [isDesktop]);
 
-  // Track which section is in view for active tab styling (scroll-based: section containing viewport anchor point)
+  // Track which section is in view — same IntersectionObserver rule as particles.
+  // rootMargin creates a detection band in the middle 30% of the viewport so it
+  // works correctly for both short and tall sections without intersectionRatio issues.
   useEffect(() => {
-    const viewportAnchor = 0.25; // 25% from top of viewport
-    const updateActiveSection = () => {
-      const y = typeof window !== 'undefined' ? window.innerHeight * viewportAnchor : 0;
-      // Check home first — when viewport anchor is in home section, set activeSectionId to 'home' (bubble disappears)
-      const homeEl = document.getElementById('home');
-      if (homeEl) {
-        const homeRect = homeEl.getBoundingClientRect();
-        if (homeRect.top <= y && homeRect.bottom >= y) {
-          setActiveSectionId('home');
-          return;
-        }
-      }
-      let active = null;
-      let activeTop = -Infinity;
-      sectionIds.forEach((id) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= y && rect.bottom >= y) {
-          if (rect.top > activeTop) {
-            activeTop = rect.top;
-            active = id;
+    const allIds = ['home', ...sectionIds];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSectionId(entry.target.id);
           }
         }
-      });
-      setActiveSectionId(active);
-    };
-    updateActiveSection();
-    window.addEventListener('scroll', updateActiveSection, { passive: true });
-    window.addEventListener('resize', updateActiveSection);
-    return () => {
-      window.removeEventListener('scroll', updateActiveSection);
-      window.removeEventListener('resize', updateActiveSection);
-    };
+      },
+      { rootMargin: '-35% 0px -35% 0px', threshold: 0 }
+    );
+    allIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
   // Measure active tab position for sliding bubble (desktop + mobile)
@@ -329,7 +313,7 @@ export default function Navbar({ variant = "desktop" }) {
               height: bubbleStyle.height,
               opacity: activeSectionId === 'home' ? 0 : 1,
             }}
-            transition={{ type: 'tween', ease: [0.4, 0, 0.2, 1], duration: 0.4 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 40, mass: 0.8 }}
           />
           <ul className="flex gap-2 sm:gap-4 md:gap-6 mx-auto relative z-10">
           {navLinks.map(link => {
@@ -552,7 +536,7 @@ export default function Navbar({ variant = "desktop" }) {
               height: bubbleStyle.height,
               opacity: activeSectionId === 'home' ? 0 : 1,
             }}
-            transition={{ type: 'tween', ease: [0.4, 0, 0.2, 1], duration: 0.4 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 40, mass: 0.8 }}
           />
           {navLinks.filter((link) => link.name !== 'About').map((link) => {
             const Icon = link.icon;

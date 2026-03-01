@@ -96,7 +96,7 @@ function EducationExperienceSection() {
             
             <span className="relative z-10">
               {activeTab === idx ? (
-                <span className="gradient-text gradient-text-infinite">{tab.name}</span>
+                <span className="text-white">{tab.name}</span>
               ) : (
                 <span
                   style={{
@@ -224,7 +224,7 @@ function EducationExperienceSection() {
                           >
                             {activeTab === 0 ? item.degree : item.role}
                           </span>
-                          <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 gradient-text gradient-text-infinite">
+                          <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white">
                             {activeTab === 0 ? item.degree : item.role}
                           </span>
                         </span>

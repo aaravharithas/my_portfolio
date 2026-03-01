@@ -121,7 +121,7 @@ function ContactSection() {
       viewport={{ once: true }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
-      <h2 
+      <h2
         className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 dark:text-white"
         style={{ color: themeMode === 'light' ? '#000000' : undefined }}
       >
@@ -151,13 +151,14 @@ function ContactSection() {
           value={formData.name}
           onChange={handleChange}
           placeholder="Your Name"
-          className="px-3 py-2 sm:px-4 sm:py-3 rounded-lg shadow-glass focus:outline-none transition-all relative z-10 text-sm sm:text-base"
+          className="px-3 py-2 sm:px-4 sm:py-3 rounded-lg shadow-glass focus:outline-none transition-all relative z-10 text-sm sm:text-base placeholder:text-gray-500 dark:placeholder:text-gray-400"
           style={{
             minHeight: "44px",
             background: getGlassBackground('form', themeMode),
             border: `1px solid ${getGlassBorder('form', themeMode)}`,
             backdropFilter: `blur(${glassmorphic.blur.md})`,
             WebkitBackdropFilter: `blur(${glassmorphic.blur.md})`,
+            color: themeMode === 'light' ? '#171717' : '#ededed',
           }}
           onFocus={(e) => {
             e.currentTarget.style.borderColor = theme.colors.brand.appleBlue;
@@ -173,12 +174,13 @@ function ContactSection() {
           value={formData.email}
           onChange={handleChange}
           placeholder="Your Email"
-          className="px-4 py-3 rounded-lg shadow-glass focus:outline-none transition-all relative z-10"
+          className="px-4 py-3 rounded-lg shadow-glass focus:outline-none transition-all relative z-10 placeholder:text-gray-500 dark:placeholder:text-gray-400"
           style={{
             background: getGlassBackground('form', themeMode),
             border: `1px solid ${getGlassBorder('form', themeMode)}`,
             backdropFilter: `blur(${glassmorphic.blur.md})`,
             WebkitBackdropFilter: `blur(${glassmorphic.blur.md})`,
+            color: themeMode === 'light' ? '#171717' : '#ededed',
           }}
           onFocus={(e) => {
             e.currentTarget.style.borderColor = theme.colors.brand.appleBlue;
@@ -193,12 +195,13 @@ function ContactSection() {
           value={formData.message}
           onChange={handleChange}
           placeholder="Your Message"
-          className="px-3 py-2 sm:px-4 sm:py-3 rounded-lg shadow-glass focus:outline-none min-h-[80px] sm:min-h-[100px] transition-all text-sm sm:text-base"
+          className="px-3 py-2 sm:px-4 sm:py-3 rounded-lg shadow-glass focus:outline-none min-h-[80px] sm:min-h-[100px] transition-all text-sm sm:text-base placeholder:text-gray-500 dark:placeholder:text-gray-400"
           style={{
             background: getGlassBackground('form', themeMode),
             border: `1px solid ${getGlassBorder('form', themeMode)}`,
             backdropFilter: `blur(${glassmorphic.blur.md})`,
             WebkitBackdropFilter: `blur(${glassmorphic.blur.md})`,
+            color: themeMode === 'light' ? '#171717' : '#ededed',
           }}
           onFocus={(e) => {
             e.currentTarget.style.borderColor = theme.colors.brand.appleBlue;
@@ -222,7 +225,7 @@ function ContactSection() {
             e.currentTarget.style.background = getGlassBackground('button', themeMode);
           }}
         >
-          <span className="gradient-text gradient-text-infinite">
+          <span className={themeMode === 'light' ? 'text-black' : 'text-white'}>
             {formStatus === 'sent' ? 'Message Sent ✓' : 'Send Message'}
           </span>
         </button>
@@ -302,7 +305,7 @@ function ContactSection() {
           whileTap={{ scale: 0.95 }}
           transition={{ type: 'spring', stiffness: 300, damping: 18 }}
         >
-          <span className="gradient-text gradient-text-infinite">Download Resume</span>
+          <span className={themeMode === 'light' ? 'text-black' : 'text-white'}>Download Resume</span>
         </motion.a>
       )}
     </motion.section>
