@@ -94,10 +94,10 @@ function ProjectsSection() {
     <motion.section
       id="projects"
       className="w-full max-w-6xl px-4 py-20 mx-auto"
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <h2
         className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 md:mb-10 text-center dark:text-white"
@@ -369,6 +369,16 @@ function ProjectsSection() {
                                 themeMode === "dark"
                                   ? "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 100%)"
                                   : "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.05) 100%)",
+                            }}
+                          />
+                          {/* Hover tint overlay — glass lift effect */}
+                          <div
+                            className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            style={{
+                              background:
+                                themeMode === "dark"
+                                  ? "rgba(0,0,0,0.22)"
+                                  : "rgba(255,255,255,0.18)",
                             }}
                           />
                         </div>

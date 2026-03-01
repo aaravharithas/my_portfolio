@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { usePortfolio } from "../context/PortfolioContext.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
@@ -69,6 +69,12 @@ function ContactSection() {
     setFormData({ name: '', email: '', message: '' });
   };
 
+  useEffect(() => {
+    if (formStatus !== 'sent') return;
+    const t = setTimeout(() => setFormStatus('idle'), 3000);
+    return () => clearTimeout(t);
+  }, [formStatus]);
+
   // Build socials array from API data
   const socials = [];
   if (portfolioData?.social) {
@@ -110,10 +116,10 @@ function ContactSection() {
     <motion.section
       id="contact"
       className="w-full max-w-xs sm:max-w-md md:max-w-xl px-4 py-12 sm:py-16 mx-auto text-center"
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
     >
       <h2 
         className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 dark:text-white"

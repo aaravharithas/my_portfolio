@@ -8,6 +8,7 @@ import ToolsSection from './components/ToolsSection.jsx'
 import ProjectsSection from './components/ProjectsSection.jsx'
 import ContactSection from './components/ContactSection.jsx'
 import Footer from './components/Footer.jsx'
+import AmbientBackground from './components/AmbientBackground.jsx'
 import LoadingScreen from './components/LoadingScreen.jsx'
 import { PortfolioProvider, usePortfolio } from './context/PortfolioContext.jsx'
 import { ThemeProvider } from './context/ThemeContext.jsx'
@@ -75,7 +76,8 @@ function PortfolioContent() {
     <>
       {/* Portfolio mounts during loading so components initialize without glitches */}
       <ClientLayout>
-        <div className="overflow-x-hidden">
+        <AmbientBackground />
+        <div style={{ overflowX: 'clip' }}>
           <HeroSection />
           <AboutSection />
           <EducationExperienceSection />
