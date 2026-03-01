@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import {
   motion,
   useMotionValue,
-  useSpring,
   useVelocity,
   useTransform,
   AnimatePresence,
@@ -29,13 +28,9 @@ function AppleCursorInner() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  const springConfig = { damping: 45, stiffness: 1200 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
-
-  // Velocity for speed-based opacity (trail dots removed — too expensive)
-  const velocityX = useVelocity(cursorXSpring);
-  const velocityY = useVelocity(cursorYSpring);
+  // Velocity for speed-based opacity
+  const velocityX = useVelocity(cursorX);
+  const velocityY = useVelocity(cursorY);
   const speed = useTransform(
     [velocityX, velocityY],
     ([vx, vy]) => Math.sqrt(vx * vx + vy * vy)
@@ -56,7 +51,7 @@ function AppleCursorInner() {
   const cursorOpacity = useTransform(
     [isVisibleMotion, speed, hoverActiveMotion],
     ([vis, s, hover]) =>
-      vis * (hover ? 1 : 0.3 + Math.min(Number(s) / 400, 0.7))
+      vis * (hover ? 1 : 0.7 + Math.min(Number(s) / 600, 0.3))
   );
 
   useEffect(() => {
@@ -148,8 +143,8 @@ function AppleCursorInner() {
       <motion.div
         className="fixed pointer-events-none z-[9999] mix-blend-difference"
         style={{
-          left: cursorXSpring,
-          top: cursorYSpring,
+          left: cursorX,
+          top: cursorY,
           x: "-50%",
           y: "-50%",
           opacity: cursorOpacity,

@@ -65,20 +65,20 @@ function HeroSection() {
     <section
       id="home"
       aria-label="Introduction"
-      className="w-full flex flex-col justify-center items-start text-left relative px-4 max-w-7xl mx-auto pt-20 sm:pt-24 md:pt-24 lg:pt-28 min-h-[calc(100dvh-4rem)] sm:min-h-[calc(100dvh-5rem)] md:min-h-[calc(100dvh-6rem)] lg:min-h-[calc(100dvh-7rem)]"
+      className="w-full flex flex-col justify-center items-start text-left relative px-4 max-w-7xl mx-auto pt-20 sm:pt-24 md:pt-24 lg:pt-28 min-h-[calc(100svh-4rem)] sm:min-h-[calc(100svh-5rem)] md:min-h-[calc(100svh-6rem)] lg:min-h-[calc(100svh-7rem)]"
     >
       <motion.div
         className="z-10 flex flex-1 min-h-0 w-full flex-col justify-center items-start overflow-visible"
-        initial={{ opacity: 0, y: 40, filter: "blur(20px)" }}
+        initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+        transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
       >
       <div className="z-10 flex flex-col items-start w-full min-h-0 max-w-full">
         {/* Animated Hello in multiple languages */}
         <motion.div
-          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+          initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8, delay: 0.5 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           className="mb-6 md:mb-8 h-12 flex items-center"
           style={{
             minWidth: `${GREETING_MIN_WIDTH_PX}px`,
@@ -90,7 +90,7 @@ function HeroSection() {
           <AnimatePresence mode="wait">
             <motion.h2
               key={currentGreeting}
-              initial={{ opacity: 0, y: 20, scale: 0.9, filter: "blur(5px)" }}
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
               exit={{ opacity: 0, y: -20, scale: 1.1 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
@@ -104,9 +104,9 @@ function HeroSection() {
 
         {/* Main heading - Your Name with gradient */}
         <motion.div
-          initial={{ opacity: 0, y: 30, filter: "blur(15px)" }}
+          initial={{ opacity: 0, y: 16, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8, delay: 0.7 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
           className="mb-8 md:mb-12"
         >
           <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-none tracking-tight">
@@ -129,9 +129,9 @@ function HeroSection() {
 
         {/* Role/Title - React Bits style split text */}
         <motion.div
-          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+          initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.6, delay: 0.9 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
           className="mb-8 md:mb-12"
         >
           <SplitText
@@ -151,9 +151,9 @@ function HeroSection() {
 
         {/* Description - from API (tagline/description/bio) or fallback */}
         <motion.div
-          initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+          initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.6, delay: 1.1 }}
+          transition={{ duration: 0.4, delay: 0.75 }}
           className="mb-12 max-w-2xl"
         >
           <p
@@ -169,9 +169,9 @@ function HeroSection() {
 
         {/* CTA Buttons - shared GlassButton, no negative margin */}
         <motion.div
-          initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+          initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.6, delay: 1.3 }}
+          transition={{ duration: 0.4, delay: 0.9 }}
           className="flex flex-col sm:flex-row gap-4 relative z-20"
         >
           <GlassButton href="#projects" themeMode={themeMode} reduceMotion={reduceMotion}>

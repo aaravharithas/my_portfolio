@@ -107,6 +107,7 @@ body.cursor-hidden * {
   cursor: none !important;
 }
 
+
 /* Liquid glass background - CSS-only animation (GPU compositor, zero JS cost) */
 @keyframes liquid-glass-shift {
   0%, 100% { background-position: 0% 50%; }

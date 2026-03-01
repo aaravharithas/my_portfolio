@@ -117,10 +117,10 @@ function ToolsSection() {
     <motion.section
       id="tools"
       className="w-full max-w-6xl px-4 py-20 mx-auto"
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
     >
       <h2 
         className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 sm:mb-10 md:mb-12 text-center dark:text-white"
@@ -135,18 +135,18 @@ function ToolsSection() {
           {toolSvgs.map((tool, idx) => (
             <motion.div
               key={tool.name}
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.92 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: idx * 0.05 }}
-              whileHover={{ scale: 1.2 }}
+              whileHover={{ scale: 1.15, transition: { duration: 0.12, ease: "easeOut" } }}
               className="flex flex-col items-center justify-center group"
             >
               <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mb-1 sm:mb-2">
                 {defaultIconFailedNames.has(tool.name) ? (
                   /* Inline SVG when both skill icon and default icon URL failed */
                   <DefaultIconSvg
-                    className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 group-hover:scale-110 transition-transform duration-200"
+                    className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 "
                     style={{
                       color: themeMode === 'light' ? '#000' : '#fff',
                     }}
@@ -156,7 +156,7 @@ function ToolsSection() {
                   <img
                     src={DEFAULT_ICON_URL}
                     alt={`${tool.name} (default icon)`}
-                    className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 group-hover:scale-110 transition-transform duration-200"
+                    className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 "
                     style={{
                       filter: themeMode === 'light'
                         ? 'brightness(0) saturate(100%)'
@@ -169,7 +169,7 @@ function ToolsSection() {
                   <img
                     src={getIconUrl(tool.slug)}
                     alt={`${tool.name} icon`}
-                    className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 group-hover:scale-110 transition-transform duration-200"
+                    className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 "
                     style={{
                       filter: themeMode === 'light'
                         ? 'brightness(0) saturate(100%)'
