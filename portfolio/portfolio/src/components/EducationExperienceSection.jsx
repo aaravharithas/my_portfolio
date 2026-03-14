@@ -64,9 +64,7 @@ function EducationExperienceSection() {
               boxShadow: activeTab === idx ? glassmorphic.shadows.buttonHover : glassmorphic.shadows.button
             }}
             whileTap={{ scale: 0.95 }}
-            className={`group relative inline-block px-6 py-3 font-medium text-base rounded-full overflow-hidden transition-all duration-300 ${
-              activeTab === idx ? '' : ''
-            }`}
+            className="group relative inline-block px-6 py-3 font-medium text-base rounded-full overflow-hidden transition-all duration-300"
             style={{
               ...getGlassStyle({ background: 'button', border: 'base', blur: 'lg', shadow: 'button', theme: themeMode, deviceType }),
               color: activeTab === idx 
@@ -90,23 +88,11 @@ function EducationExperienceSection() {
             {activeTab === idx && (
               <div
                 aria-hidden
-                className={`absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${themeMode === 'light' ? 'liquid-glass-anim-light' : 'liquid-glass-anim'}`}
+                className={`absolute inset-0 rounded-full opacity-100 transition-opacity duration-300 ${themeMode === 'light' ? 'liquid-glass-anim-light' : 'liquid-glass-anim'}`}
               />
             )}
             
-            <span className="relative z-10">
-              {activeTab === idx ? (
-                <span className="text-white">{tab.name}</span>
-              ) : (
-                <span
-                  style={{
-                    color: themeMode === 'light' ? '#4a4a4a' : theme.colors.text.secondary[themeMode],
-                  }}
-                >
-                  {tab.name}
-                </span>
-              )}
-            </span>
+            <span className="relative z-10">{tab.name}</span>
           </motion.button>
         ))}
       </div>
