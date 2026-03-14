@@ -357,7 +357,6 @@ function ProjectsSection() {
                             alt={project.title}
                             loading="lazy"
                             className="w-full h-full object-cover transition-transform duration-500"
-                            whileHover={{ scale: 1.1 }}
                             onError={(e) => {
                               e.target.src = "/images/default-project.png";
                             }}
