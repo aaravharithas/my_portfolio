@@ -210,7 +210,12 @@ function EducationExperienceSection() {
                           >
                             {activeTab === 0 ? item.degree : item.role}
                           </span>
-                          <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white">
+                          <span
+                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            style={{
+                              color: themeMode === 'light' ? '#000000' : '#ffffff',
+                            }}
+                          >
                             {activeTab === 0 ? item.degree : item.role}
                           </span>
                         </span>

@@ -181,8 +181,10 @@ function ToolsSection() {
                 )}
               </div>
               <h3 
-                className="text-sm font-medium text-center dark:text-white opacity-70 group-hover:opacity-100 transition-opacity duration-200"
-                style={{ color: themeMode === 'light' ? '#000000' : undefined }}
+                className="text-sm font-medium text-center opacity-70 group-hover:opacity-100 transition-opacity duration-200"
+                style={{
+                  color: themeMode === 'light' ? '#000000' : '#ffffff',
+                }}
               >
                 {tool.name}
               </h3>

@@ -249,10 +249,11 @@ export default function Navbar({ variant = "desktop" }) {
               {Array.from({ length: 3 }, (_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute rounded-full border border-white/40"
+                  className="absolute rounded-full border"
                   style={{
                     width: `${(i + 2) * 12}px`,
                     height: `${(i + 2) * 12}px`,
+                    borderColor: themeMode === 'light' ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.4)',
                   }}
                   animate={desktopSiriActive ? {
                     scale: [1, 1.5, 1.2],
@@ -472,10 +473,11 @@ export default function Navbar({ variant = "desktop" }) {
               {Array.from({ length: 3 }, (_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute rounded-full border border-white/40"
+                  className="absolute rounded-full border"
                   style={{
                     width: `${(i + 2) * 12}px`,
                     height: `${(i + 2) * 12}px`,
+                    borderColor: themeMode === 'light' ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.4)',
                   }}
                   animate={siriActive ? {
                     scale: [1, 1.5, 1.2],
