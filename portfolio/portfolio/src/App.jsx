@@ -11,11 +11,12 @@ import Footer from './components/Footer.jsx'
 import AmbientBackground from './components/AmbientBackground.jsx'
 import LoadingScreen from './components/LoadingScreen.jsx'
 import { PortfolioProvider, usePortfolio } from './context/PortfolioContext.jsx'
-import { ThemeProvider } from './context/ThemeContext.jsx'
+import { ThemeProvider, useTheme } from './context/ThemeContext.jsx'
 import './index.css'
 
 function PortfolioContent() {
   const { loading, error, portfolioData } = usePortfolio();
+  const { theme: themeMode } = useTheme();
   const [showLoadingScreen, setShowLoadingScreen] = React.useState(true);
   const [loadingScreenComplete, setLoadingScreenComplete] = React.useState(false);
 
@@ -56,10 +57,20 @@ function PortfolioContent() {
       <ClientLayout>
         <div className="min-h-screen flex items-center justify-center px-4">
           <div className="text-center max-w-md">
-            <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">
+            <h2
+              className="text-2xl font-bold mb-4"
+              style={{ color: themeMode === 'light' ? '#000000' : '#ffffff' }}
+            >
               Error Loading Portfolio
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+            <p
+              className="mb-4"
+              style={{
+                color: themeMode === 'light' ? '#4b5563' : '#9ca3af',
+              }}
+            >
+              {error}
+            </p>
             <button
               onClick={() => window.location.reload()}
               className="px-6 py-3 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors"

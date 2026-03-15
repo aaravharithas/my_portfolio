@@ -270,9 +270,10 @@ export default function LoadingScreen({ onComplete, dataReady = false }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-sm sm:text-base md:text-lg mb-2 font-extrabold dark:text-white text-black"
+            className="text-sm sm:text-base md:text-lg mb-2 font-extrabold"
             style={{
               fontFamily: "'Plus Jakarta Sans', Inter, system-ui, sans-serif",
+              color: themeMode === 'light' ? '#000000' : '#ffffff',
             }}
           >
             {phases[currentPhase]}
@@ -280,9 +281,10 @@ export default function LoadingScreen({ onComplete, dataReady = false }) {
 
           {/* Progress Percentage */}
           <motion.p
-            className="text-sm sm:text-base md:text-lg font-bold dark:text-white text-black"
+            className="text-sm sm:text-base md:text-lg font-bold"
             style={{
               fontFamily: "'Plus Jakarta Sans', Inter, system-ui, sans-serif",
+              color: themeMode === 'light' ? '#000000' : '#ffffff',
             }}
           >
             {Math.round(loadingProgress)}%
