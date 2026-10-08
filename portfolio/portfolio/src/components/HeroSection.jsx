@@ -1,190 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { usePortfolio } from "../context/PortfolioContext.jsx";
-import { useTheme } from "../context/ThemeContext.jsx";
-import { theme } from "../config/theme.js";
-import GlassButton from "./GlassButton.jsx";
-import SplitText from "./react-bits/SplitText.jsx";
+import { HiArrowDownRight, HiArrowUpRight } from 'react-icons/hi2';
+import { usePortfolio } from '../context/usePortfolio.js';
+import { useTheme } from '../context/useTheme.js';
+import GlassProfile from './GlassProfile.jsx';
+import { Badge, Button, PortfolioImage, Surface } from './ui.jsx';
 
-// Constants for maintainability and viewport consistency
-const GREETING_INTERVAL_MS = 2000;
-const GREETING_MIN_WIDTH_PX = 150;
-const DEFAULT_DESCRIPTION =
-  "Crafting elegant digital experiences with code, design, and a touch of magic. I transform complex challenges into beautiful, functional solutions that drive results.";
-
-const greetings = [
-  "Hello",
-  "Hola",
-  "Bonjour",
-  "Hallo",
-  "Ciao",
-  "こんにちは",
-  "안녕하세요",
-  "Привет",
-  "مرحبا",
-  "नमस्ते",
-  "你好",
-  "Olá",
-  "ഹലോ", // Malayalam
-  "வணக்கம்", // Tamil
-  "నమస్కారం", // Telugu
-];
-
-function HeroSection() {
-  const { theme: themeMode } = useTheme();
-  const { portfolioData } = usePortfolio();
-  const [currentGreeting, setCurrentGreeting] = useState(0);
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduceMotion(mq.matches);
-    const handler = (e) => setReduceMotion(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentGreeting((prev) => (prev + 1) % greetings.length);
-    }, GREETING_INTERVAL_MS);
-    return () => clearInterval(interval);
-  }, []);
-
-  const firstName = portfolioData?.firstName ?? portfolioData?.name?.split(" ")[0] ?? "";
-  const lastName = portfolioData?.lastName ?? portfolioData?.name?.split(" ").slice(1).join(" ") ?? "";
-  const title = portfolioData?.title ?? "";
-  const description =
-    portfolioData?.tagline ??
-    portfolioData?.description ??
-    portfolioData?.bio ??
-    (portfolioData?.aboutMe?.trim() || undefined) ??
-    DEFAULT_DESCRIPTION;
-
-  return (
-    <section
-      id="home"
-      aria-label="Introduction"
-      className="w-full flex flex-col justify-center items-start text-left relative px-4 max-w-7xl mx-auto pt-14 sm:pt-24 md:pt-24 lg:pt-28 min-h-[calc(100svh-4rem)] sm:min-h-[calc(100svh-5rem)] md:min-h-[calc(100svh-6rem)] lg:min-h-[calc(100svh-7rem)]"
-    >
-      <motion.div
-        className="z-10 flex flex-1 min-h-0 w-full flex-col justify-center items-start overflow-visible"
-        initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
-      >
-      <div className="z-10 flex flex-col items-start w-full min-h-0 max-w-full">
-        {/* Animated Hello in multiple languages */}
-        <motion.div
-          initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-4 md:mb-8 h-12 flex items-center"
-          style={{
-            minWidth: `${GREETING_MIN_WIDTH_PX}px`,
-            display: "inline-flex",
-          }}
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <AnimatePresence mode="wait">
-            <motion.h2
-              key={currentGreeting}
-              initial={{ opacity: 0, y: 20, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -20, scale: 1.1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="text-lg sm:text-xl md:text-2xl font-medium dark:text-white whitespace-nowrap"
-              style={{ color: themeMode === "light" ? "#000000" : undefined }}
-            >
-              {greetings[currentGreeting]}
-            </motion.h2>
-          </AnimatePresence>
-        </motion.div>
-
-        {/* Main heading - Your Name with gradient */}
-        <motion.div
-          initial={{ opacity: 0, y: 16, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mb-5 md:mb-12"
-        >
-          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-none tracking-tight">
-            <motion.span
-              className="block gradient-text gradient-text-infinite"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            >
-              {firstName}
-            </motion.span>
-            <motion.span
-              className="block gradient-text gradient-text-infinite"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            >
-              {lastName}
-            </motion.span>
-          </h1>
-        </motion.div>
-
-        {/* Role/Title - React Bits style split text */}
-        <motion.div
-          initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="mb-5 md:mb-12"
-        >
-          <SplitText
-            tag="h2"
-            text={title}
-            className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold dark:text-white"
-            style={{ color: themeMode === "light" ? "#000000" : undefined }}
-            splitType="chars"
-            delay={80}
-            duration={0.7}
-            from={{ opacity: 0, y: 36, scale: 0.85 }}
-            to={{ opacity: 1, y: 0, scale: 1 }}
-            reduceMotion={reduceMotion}
-            textAlign="left"
-          />
-        </motion.div>
-
-        {/* Description - from API (tagline/description/bio) or fallback */}
-        <motion.div
-          initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.4, delay: 0.75 }}
-          className="mb-12 max-w-2xl"
-        >
-          <p
-            className="text-lg md:text-xl leading-relaxed font-bold"
-            style={{
-              color:
-                themeMode === "light" ? "#000000" : theme.colors.text.secondary[themeMode],
-            }}
-          >
-            {description}
-          </p>
-        </motion.div>
-
-        {/* CTA Buttons - shared GlassButton, no negative margin */}
-        <motion.div
-          initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.4, delay: 0.9 }}
-          className="flex flex-col sm:flex-row gap-4 relative z-20"
-        >
-          <GlassButton href="#projects" themeMode={themeMode} reduceMotion={reduceMotion}>
-            View My Work
-          </GlassButton>
-          <GlassButton href="#contact" themeMode={themeMode} reduceMotion={reduceMotion}>
-            Get In Touch
-          </GlassButton>
-        </motion.div>
+export default function HeroSection() {
+  const { portfolioData: data } = usePortfolio();
+  const { designTheme } = useTheme();
+  const firstName = data.firstName || data.name?.split(' ')[0] || '';
+  const lastName = data.lastName || data.name?.split(' ').slice(1).join(' ') || '';
+  const description = data.tagline || data.description || data.bio || data.aboutMe || '';
+  return <section id="home" className="hero section-shell" aria-label="Introduction">
+    <div className="hero-copy enter">
+      <p className="eyebrow"><span className="status-dot" /> Hello, I’m</p>
+      <h1>{firstName}<span className="accent-text">{lastName}</span></h1>
+      <p className="hero-role">{data.title}</p>
+      <p className="hero-description muted">{description}</p>
+      <div className="button-row">
+        <Button href="#projects" variant="primary">View my work <HiArrowUpRight aria-hidden="true" /></Button>
+        <Button href="#contact">Let’s talk <HiArrowUpRight aria-hidden="true" /></Button>
       </div>
-      </motion.div>
-    </section>
-  );
+    </div>
+    {designTheme === 'clay' ? <Surface className="hero-profile" as="aside" aria-label="Profile">
+      <PortfolioImage src={data.profileImage} alt={data.name} className="hero-portrait" width="280" height="280" />
+      <Badge>{data.address || 'Building for the web'}</Badge>
+      <p>{data.title}</p>
+      <a className="text-link" href="#about">A little about me <HiArrowUpRight aria-hidden="true" /></a>
+    </Surface> : <GlassProfile data={data} />}
+    <a className="hero-scroll" href="#about"><HiArrowDownRight aria-hidden="true" /> Explore the portfolio</a>
+  </section>;
 }
-
-export default React.memo(HeroSection);

@@ -1,64 +1,35 @@
-"use client";
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { fetchPortfolioData } from '../services/apiService';
+import { useEffect, useState } from 'react';
+import { fetchPortfolioData } from '../services/apiService.js';
 import fallbackPortfolio from '../data/fallbackPortfolio.json';
+import { PortfolioContext } from './portfolioState.js';
 
-const PortfolioContext = createContext();
-
-export const usePortfolio = () => {
-  const context = useContext(PortfolioContext);
-  if (!context) {
-    throw new Error('usePortfolio must be used within a PortfolioProvider');
-  }
-  return context;
-};
-
-export const PortfolioProvider = ({ children }) => {
+export function PortfolioProvider({ children }) {
   const [portfolioData, setPortfolioData] = useState(fallbackPortfolio);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [request, setRequest] = useState(0);
 
   useEffect(() => {
-    const loadPortfolioData = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchPortfolioData();
+    const controller = new AbortController();
+    fetchPortfolioData(controller.signal)
+      .then((data) => {
+        if (controller.signal.aborted) return;
         setPortfolioData(data);
         setError(null);
-      } catch (err) {
-        setError(err.message);
-        setPortfolioData(fallbackPortfolio);
-        console.error('Failed to load portfolio data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setError('Live updates are unavailable. Showing saved portfolio content.');
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [request]);
 
-    loadPortfolioData();
-  }, []);
-
-  const value = {
-    portfolioData,
-    loading,
-    error,
-    refetch: () => {
-      setLoading(true);
-      fetchPortfolioData()
-        .then((data) => {
-          setPortfolioData(data);
-          setError(null);
-        })
-        .catch((err) => {
-          setError(err.message);
-          setPortfolioData(fallbackPortfolio);
-        })
-        .finally(() => setLoading(false));
-    }
+  const refetch = () => {
+    setLoading(true);
+    setError(null);
+    setRequest((count) => count + 1);
   };
-
-  return (
-    <PortfolioContext.Provider value={value}>
-      {children}
-    </PortfolioContext.Provider>
-  );
-};
+  return <PortfolioContext.Provider value={{ portfolioData, loading, error, refetch }}>{children}</PortfolioContext.Provider>;
+}

@@ -1,0 +1,124 @@
+/* Monochrome glass: neutral light, fine edges, and restrained frosted surfaces. */
+:root,
+[data-design="glass"] {
+  --page-bg: #f5f5f7;
+  --text: #1d1d1f;
+  --muted: #626266;
+  --accent: #1d1d1f;
+  --accent-end: #1d1d1f;
+  --accent-soft: #e8e8eb;
+  --on-accent: #fff;
+  --surface: rgba(255, 255, 255, .56);
+  --surface-solid: #fafafa;
+  --surface-border: rgba(0, 0, 0, .08);
+  --line: rgba(0, 0, 0, .13);
+  --control: rgba(255, 255, 255, .6);
+  --control-hover: rgba(255, 255, 255, .9);
+  --shadow: 0 16px 40px -24px rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .9);
+  --control-shadow: 0 2px 6px rgba(0, 0, 0, .035), inset 0 1px 0 rgba(255, 255, 255, .8);
+  --input-shadow: inset 0 1px 3px rgba(0, 0, 0, .025);
+  --radius: 22px;
+  --control-radius: 12px;
+  --surface-blur: blur(10px);
+  --page-glow: radial-gradient(ellipse at 88% 30%, #e1e1e4 0, transparent 42%), radial-gradient(ellipse at 40% 55%, #fff 0, transparent 48%);
+  --portrait-bg: #e5e5e7;
+  --glass-shine: rgba(255, 255, 255, .44);
+  --glass-edge: rgba(255, 255, 255, .7);
+  --glass-orb: radial-gradient(circle at 28% 20%, #fff 0, #e7e7e9 24%, #ababaf 54%, #747478 76%, #d7d7db 100%);
+  --glass-sheet: rgba(255, 255, 255, .28);
+  --glass-glow: rgba(255, 255, 255, .1);
+}
+[data-design="glass"][data-mode="dark"] {
+  --page-bg: #080808;
+  --text: #f5f5f7;
+  --muted: #a1a1a6;
+  --accent: #f5f5f7;
+  --accent-end: #f5f5f7;
+  --accent-soft: #303033;
+  --on-accent: #1d1d1f;
+  --surface: rgba(32, 32, 34, .54);
+  --surface-solid: #1c1c1e;
+  --surface-border: rgba(255, 255, 255, .1);
+  --line: rgba(255, 255, 255, .16);
+  --control: rgba(255, 255, 255, .055);
+  --control-hover: rgba(255, 255, 255, .1);
+  --shadow: 0 18px 40px -24px rgba(0, 0, 0, .65), inset 0 1px 0 rgba(255, 255, 255, .1);
+  --control-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+  --page-glow: radial-gradient(ellipse at 88% 30%, #262628 0, transparent 44%), radial-gradient(ellipse at 40% 55%, #111 0, transparent 48%);
+  --portrait-bg: #2c2c2e;
+  --glass-shine: rgba(255, 255, 255, .06);
+  --glass-edge: rgba(255, 255, 255, .15);
+  --glass-orb: radial-gradient(circle at 28% 20%, #f5f5f7 0, #a2a2a7 23%, #56565b 52%, #28282b 78%, #151517 100%);
+  --glass-sheet: rgba(255, 255, 255, .035);
+  --glass-glow: rgba(255, 255, 255, .015);
+}
+[data-design="glass"] body { background-size: 100% 1100px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+[data-design="glass"] .accent-text { background: none; color: var(--text); }
+[data-design="glass"] .hero h1 > .accent-text { color: var(--muted); }
+[data-design="glass"] h1, [data-design="glass"] h2, [data-design="glass"] h3 { font-weight: 600; }
+[data-design="glass"] .hero-role { font-weight: 500; }
+[data-design="glass"] .settings-panel::backdrop { background: rgba(0, 0, 0, .28); }
+[data-design="glass"] .surface {
+  background: linear-gradient(135deg, var(--glass-shine), transparent 45%, var(--glass-glow)), var(--surface);
+  border-top-color: var(--glass-edge);
+  border-left-color: var(--glass-edge);
+}
+[data-design="glass"] .nav-bar { background: linear-gradient(115deg, var(--glass-shine), transparent 65%), var(--surface); }
+[data-design="glass"] .about-layout,
+[data-design="glass"] .contact-form { backdrop-filter: var(--surface-blur); -webkit-backdrop-filter: var(--surface-blur); }
+[data-design="glass"] .journey-card { border-left: 1px solid var(--surface-border); }
+[data-design="glass"] .section-heading .eyebrow span { color: var(--muted); }
+[data-design="glass"] .button--secondary,
+[data-design="glass"] .social-links a { background: linear-gradient(145deg, var(--glass-shine), transparent), var(--control); border: 1px solid var(--surface-border); }
+[data-design="glass"] .button--primary { background: var(--accent); box-shadow: 0 2px 6px rgba(0, 0, 0, .08); border: 1px solid transparent; }
+[data-design="glass"] .skill-tile { background: linear-gradient(145deg, var(--glass-shine), transparent), var(--surface); border: 1px solid var(--surface-border); border-radius: 18px; box-shadow: var(--control-shadow); }
+[data-design="glass"] .project-card { padding: 10px; }
+[data-design="glass"] .project-image-wrap { border-radius: 16px; border: 1px solid var(--glass-edge); }
+[data-design="glass"] .project-body { padding: 24px 14px 16px; }
+[data-design="glass"] .hero { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 54px; }
+[data-design="glass"] .hero h1 { font-size: clamp(3.8rem, 7.5vw, 7rem); }
+[data-design="glass"] .hero .eyebrow { letter-spacing: .2em; }
+
+/* A static silver sphere, one rear pane, and one frosted front pane. */
+.glass-scene { position: relative; isolation: isolate; width: 100%; max-width: 450px; height: 470px; justify-self: center; }
+.glass-orb { position: absolute; width: 300px; height: 300px; top: 25px; right: -12px; border-radius: 50%; background: var(--glass-orb); box-shadow: inset -12px -15px 26px rgba(0, 0, 0, .12), inset 3px 3px 12px rgba(255, 255, 255, .55); }
+.glass-sheet { position: absolute; inset: 60px 25px 45px; border: 1px solid var(--glass-edge); border-radius: 28px; background: linear-gradient(125deg, var(--glass-shine), transparent), var(--glass-sheet); box-shadow: 0 12px 28px -18px rgba(0, 0, 0, .18); }
+.glass-sheet--back { transform: rotate(-5deg) translate(0, -8px); }
+.glass-profile-card { position: absolute; inset: 85px 10px 35px; border-radius: 26px; padding: 28px; background: linear-gradient(135deg, var(--glass-shine), transparent 65%), var(--surface); border: 1px solid var(--glass-edge); box-shadow: var(--shadow); backdrop-filter: var(--surface-blur); -webkit-backdrop-filter: var(--surface-blur); display: flex; flex-direction: column; align-items: flex-start; }
+.glass-card-top { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 8px; }
+.glass-card-top .eyebrow { font-size: .55rem; letter-spacing: .12em; }
+.glass-card-top > svg { width: 20px; height: 20px; color: var(--accent); }
+.glass-monogram { display: inline-flex; position: relative; font-size: 2.2rem; font-weight: 600; letter-spacing: -.07em; margin-block: 22px 18px; line-height: 1; color: var(--text); }
+.glass-profile-card h2 { font-size: 1.35rem; letter-spacing: -.03em; }
+.glass-profile-card > p { font-size: .78rem; margin-top: 8px; }
+.glass-expertise { display: flex; flex-wrap: wrap; gap: 6px; margin-block: 18px; }
+.glass-expertise > span { font-size: .62rem; padding: 4px 9px; border: 1px solid var(--glass-edge); border-radius: 7px; background: var(--control); }
+.glass-profile-card > a { font-size: .72rem; margin-top: auto; }
+.glass-location { position: absolute; bottom: 9px; left: -5px; display: flex; align-items: center; gap: 12px; max-width: 95%; padding: 13px 18px; border: 1px solid var(--glass-edge); border-radius: 14px; background: linear-gradient(125deg, var(--glass-shine), transparent), var(--surface-solid); box-shadow: var(--shadow); font-size: .7rem; }
+.glass-location > svg { width: 16px; height: 16px; color: var(--accent); flex-shrink: 0; }
+.glass-location .status-dot { margin-left: 8px; }
+
+@media (max-width: 1050px) and (min-width: 761px) {
+  [data-design="glass"] .hero { gap: 28px; }
+  .glass-profile-card { padding: 22px; inset-inline: 0; }
+  .glass-orb { width: 250px; height: 250px; right: 0; }
+}
+@media (max-width: 760px) {
+  [data-design="glass"] { --surface: rgba(255, 255, 255, .62); --surface-blur: blur(6px); }
+  [data-design="glass"][data-mode="dark"] { --surface: rgba(28, 28, 30, .72); }
+  [data-design="glass"] .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  [data-design="glass"] .hero h1 { font-size: clamp(3.5rem, 14vw, 6rem); }
+  .glass-scene { max-width: 370px; height: 420px; }
+  .glass-orb { width: 240px; height: 240px; right: 8px; top: 12px; }
+  .glass-sheet { inset: 45px 25px 45px; }
+  .glass-profile-card { inset: 55px 10px 35px; padding: 24px; }
+  .glass-location { left: 5px; }
+}
+@media (max-width: 380px) {
+  .glass-sheet--back { transform: rotate(-4deg); }
+  .glass-card-top .eyebrow { font-size: .5rem; }
+  .glass-profile-card { padding: 20px; }
+}
+@supports not (backdrop-filter: blur(1px)) {
+  [data-design="glass"] .surface, .glass-profile-card { background: var(--surface-solid); }
+}
