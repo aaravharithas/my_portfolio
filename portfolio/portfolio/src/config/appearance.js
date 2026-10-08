@@ -12,6 +12,7 @@ export const appearanceCategories = [
     options: [
       { value: 'glass', label: 'Glass', description: 'Clear & minimal', preview: 'glass' },
       { value: 'clay', label: 'Clay', description: 'Soft & sculpted', preview: 'clay' },
+      { value: 'neumorphism', label: 'Neumorphism', description: 'Raised & recessed', preview: 'neumorphism' },
     ],
   },
   {

@@ -37,8 +37,8 @@ export default function ThemeControls() {
 
   return <>
     <button type="button" className="settings-trigger" ref={triggerRef} onClick={showSettings}
-      aria-haspopup="dialog" aria-expanded={open} aria-controls="appearance-settings">
-      <HiCog6Tooth aria-hidden="true" /><span>Settings</span>
+      aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded={open} aria-controls="appearance-settings">
+      <HiCog6Tooth aria-hidden="true" />
     </button>
     {createPortal(<dialog id="appearance-settings" className="settings-panel" ref={dialogRef}
       aria-labelledby="settings-title" aria-describedby="settings-description" onClick={handleBackdropClick} onKeyDown={keepFocusInPanel}

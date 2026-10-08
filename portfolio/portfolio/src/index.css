@@ -1,6 +1,7 @@
 @import "tailwindcss" source("./");
 @import "./styles/themes/glass.css";
 @import "./styles/themes/clay.css";
+@import "./styles/themes/neumorphism.css";
 @import "./styles/settings.css";
 
 @custom-variant dark (&:where(.dark, .dark *));

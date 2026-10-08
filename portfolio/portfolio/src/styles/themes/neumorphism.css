@@ -1,0 +1,67 @@
+[data-design="neumorphism"] {
+  --page-bg: #e8ecf0;
+  --text: #252e3b;
+  --muted: #556171;
+  --accent: #345c92;
+  --accent-end: #345c92;
+  --accent-soft: #dce5ef;
+  --on-accent: #fff;
+  --surface: #e8ecf0;
+  --surface-solid: #e8ecf0;
+  --surface-border: #ffffff55;
+  --line: #b1bcc9;
+  --control: #e8ecf0;
+  --control-hover: #dfe5ec;
+  --shadow: 9px 9px 20px #c8ced7, -9px -9px 20px #ffffff;
+  --control-shadow: 4px 4px 9px #c8ced7, -4px -4px 9px #ffffff;
+  --input-shadow: inset 4px 4px 8px #c8ced7, inset -4px -4px 8px #ffffff;
+  --radius: 26px;
+  --control-radius: 14px;
+  --surface-blur: none;
+  --page-glow: none;
+  --portrait-bg: #e8ecf0;
+}
+[data-design="neumorphism"][data-mode="dark"] {
+  --page-bg: #292f38;
+  --text: #edf1f6;
+  --muted: #b6c1ce;
+  --accent: #a8c7f2;
+  --accent-end: #a8c7f2;
+  --accent-soft: #35465e;
+  --on-accent: #202c3e;
+  --surface: #292f38;
+  --surface-solid: #292f38;
+  --surface-border: #ffffff09;
+  --line: #606e80;
+  --control: #292f38;
+  --control-hover: #333c48;
+  --shadow: 9px 9px 20px #1d2229, -9px -9px 20px #353c47;
+  --control-shadow: 4px 4px 9px #1d2229, -4px -4px 9px #353c47;
+  --input-shadow: inset 4px 4px 8px #1d2229, inset -4px -4px 8px #353c47;
+  --portrait-bg: #292f38;
+}
+
+/* A continuous material: raised panels, inset wells, and tactile controls. */
+[data-design="neumorphism"] .hero { grid-template-columns: minmax(0, 1fr) 300px; gap: 64px; }
+[data-design="neumorphism"] .hero h1 { font-size: clamp(3.3rem, 6.5vw, 6rem); }
+[data-design="neumorphism"] .hero-profile { transform: none; padding: 32px 24px; border-radius: 160px 160px 32px 32px; }
+[data-design="neumorphism"] .hero-portrait { border-radius: 50%; padding: 12px; box-shadow: var(--input-shadow); border: 1px solid var(--surface-border); }
+[data-design="neumorphism"] .badge { box-shadow: var(--input-shadow); }
+[data-design="neumorphism"] .about-portrait { border-radius: 20px; box-shadow: var(--input-shadow); padding: 10px; }
+[data-design="neumorphism"] .skills-layout { gap: 24px; }
+[data-design="neumorphism"] .skill-tile { border: 1px solid var(--surface-border); border-radius: 20px; background: var(--surface); box-shadow: var(--control-shadow); }
+[data-design="neumorphism"] .tabs { border-color: var(--surface-border); box-shadow: var(--input-shadow); padding: 8px; gap: 8px; }
+[data-design="neumorphism"] .project-card { padding: 12px; }
+[data-design="neumorphism"] .project-image-wrap { border-radius: 18px; box-shadow: var(--input-shadow); overflow: hidden; }
+[data-design="neumorphism"] .project-body { padding: 24px 14px; }
+[data-design="neumorphism"] .option-content { box-shadow: var(--control-shadow); }
+[data-design="neumorphism"] .setting-option input:checked + .option-content { box-shadow: var(--input-shadow); }
+[data-design="neumorphism"] .button:active,
+[data-design="neumorphism"] .icon-button:active,
+[data-design="neumorphism"] .settings-trigger:active { box-shadow: var(--input-shadow); transform: translateY(1px); }
+
+@media (max-width: 760px) {
+  [data-design="neumorphism"] .hero { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  [data-design="neumorphism"] .hero-profile { width: min(100%, 300px); justify-self: center; }
+  [data-design="neumorphism"] .skills-layout { gap: 16px; }
+}

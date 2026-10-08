@@ -11,8 +11,10 @@ test('migrates the original manual color preference', () => {
   assert.equal(readPreferences(storage({ theme: 'light' }), true).colorMode, 'light');
 });
 test('restores design, color, and effects independently', () => {
-  const saved = { designTheme: 'glass', colorMode: 'dark', effects: 'reduced' };
-  assert.deepEqual(readPreferences(storage({ 'portfolio-appearance': JSON.stringify(saved), theme: 'light' })), saved);
+  for (const designTheme of ['glass', 'clay', 'neumorphism']) {
+    const saved = { designTheme, colorMode: 'dark', effects: 'reduced' };
+    assert.deepEqual(readPreferences(storage({ 'portfolio-appearance': JSON.stringify(saved), theme: 'light' })), saved);
+  }
 });
 test('rejects unknown preference values without discarding valid fields', () => {
   assert.deepEqual(readPreferences(storage({ 'portfolio-appearance': '{"designTheme":"unknown","colorMode":"dark","effects":false}' })),

@@ -21,7 +21,7 @@ export default function HeroSection() {
         <Button href="#contact">Let’s talk <HiArrowUpRight aria-hidden="true" /></Button>
       </div>
     </div>
-    {designTheme === 'clay' ? <Surface className="hero-profile" as="aside" aria-label="Profile">
+    {designTheme !== 'glass' ? <Surface className="hero-profile" as="aside" aria-label="Profile">
       <PortfolioImage src={data.profileImage} alt={data.name} className="hero-portrait" width="280" height="280" />
       <Badge>{data.address || 'Building for the web'}</Badge>
       <p>{data.title}</p>
