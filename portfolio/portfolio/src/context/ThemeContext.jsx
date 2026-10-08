@@ -1,62 +1,32 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { updateCSSVariables, getCurrentTheme } from '../utils/themeUtils.js';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { isValidPreference } from '../config/appearance.js';
+import { ThemeContext } from './themeState.js';
+import { applyPreferences, loadPreferences, savePreferences } from '../utils/preferences.js';
 
-export const ThemeContext = createContext(null);
+export function ThemeProvider({ children }) {
+  const [preferences, setPreferences] = useState(loadPreferences);
+  const [systemReducedMotion, setSystemReducedMotion] = useState(() =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-};
-
-export const ThemeProvider = ({ children }) => {
-  const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  // Initialize theme on mount
   useEffect(() => {
-    setMounted(true);
-    
-    // Check for saved theme preference or default to light mode
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    setIsDark(shouldBeDark);
-    
-    // Apply theme to DOM
-    if (shouldBeDark) {
-      document.documentElement.classList.add('dark');
-      updateCSSVariables('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      updateCSSVariables('light');
-    }
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = (event) => setSystemReducedMotion(event.matches);
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    
-    if (newTheme) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      updateCSSVariables('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      updateCSSVariables('light');
-    }
-  };
+  useLayoutEffect(() => {
+    applyPreferences(preferences, systemReducedMotion);
+    savePreferences(preferences);
+  }, [preferences, systemReducedMotion]);
 
   const value = {
-    isDark,
-    theme: isDark ? 'dark' : 'light',
-    toggleTheme,
-    mounted,
+    ...preferences,
+    systemReducedMotion,
+    reducedMotion: systemReducedMotion || preferences.effects === 'reduced',
+    setPreference: (key, value) => {
+      if (isValidPreference(key, value)) setPreferences((p) => ({ ...p, [key]: value }));
+    },
   };
-
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
-};
+}
