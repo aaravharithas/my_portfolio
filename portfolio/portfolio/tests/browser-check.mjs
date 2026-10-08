@@ -131,7 +131,7 @@ try {
   await click('#tab-experience');
   await click('.pagination button:last-child');
   await screenshot('glass-light-desktop');
-  for (const design of ['glass', 'clay']) {
+  for (const design of ['glass', 'clay', 'neumorphism']) {
     await choose('designTheme', design);
     for (const mode of ['light', 'dark']) {
       await choose('colorMode', mode);
@@ -140,9 +140,9 @@ try {
       assert.equal(await evaluate('document.querySelector("input[name=name]").value'), 'Theme switch test');
       assert.equal(await evaluate('document.querySelector("#tab-experience").getAttribute("aria-selected")'), 'true');
       assert.equal(await evaluate('document.querySelector(".pagination span").textContent'), '2 / 2');
-      assert.equal(await evaluate(`getComputedStyle(document.querySelector('.project-card')).backdropFilter`), design === 'clay' ? 'none' : 'blur(10px)');
-      assert.equal(await evaluate(`document.querySelector('.hero-profile') !== null`), design === 'clay');
-      if (design === 'clay') assert.equal(await evaluate(`[...document.querySelectorAll('body *')].some(element => getComputedStyle(element).backdropFilter !== 'none')`), false);
+      assert.equal(await evaluate(`getComputedStyle(document.querySelector('.project-card')).backdropFilter`), design === 'glass' ? 'blur(10px)' : 'none');
+      assert.equal(await evaluate(`document.querySelector('.hero-profile') !== null`), design !== 'glass');
+      if (design !== 'glass') assert.equal(await evaluate(`[...document.querySelectorAll('body *')].some(element => getComputedStyle(element).backdropFilter !== 'none')`), false);
       await closeSettings();
       await evaluate('window.scrollTo(0, 0)');
       await sleep(500);
@@ -164,7 +164,7 @@ try {
   }
   await navigate('Page.reload');
   await until(`document.querySelector('.settings-trigger')`);
-  assert.equal(await evaluate('document.documentElement.dataset.design'), 'clay');
+  assert.equal(await evaluate('document.documentElement.dataset.design'), 'neumorphism');
   assert.equal(await evaluate('document.documentElement.dataset.mode'), 'dark');
   await choose('effects', 'reduced');
   assert.equal(await evaluate('document.documentElement.dataset.motion'), 'reduced');
@@ -196,7 +196,7 @@ try {
   assert.equal(await evaluate('document.documentElement.dataset.design'), 'clay');
   await send('Page.removeScriptToEvaluateOnNewDocument', { identifier });
   assert.deepEqual(errors, [], 'Uncaught browser errors');
-  console.log('PASS: four theme combinations, five viewport widths, state preservation, persistence, image fallback, reduced motion, API failure/timeout, and blocked storage.');
+  console.log('PASS: six theme combinations, five viewport widths, state preservation, persistence, image fallback, reduced motion, API failure/timeout, and blocked storage.');
   console.log('Screenshots: /tmp/portfolio-theme-screenshots');
 } finally {
   ws.close();
