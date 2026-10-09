@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { HiMoon, HiSun, HiSparkles, HiMinus, HiCog6Tooth, HiXMark, HiCheck } from 'react-icons/hi2';
+import { HiMoon, HiSun, HiCog6Tooth, HiXMark, HiCheck } from 'react-icons/hi2';
 import { useTheme } from '../context/useTheme.js';
 import { appearanceCategories } from '../config/appearance.js';
 
-const icons = { sun: HiSun, moon: HiMoon, sparkles: HiSparkles, still: HiMinus };
+const icons = { sun: HiSun, moon: HiMoon };
 
 export default function ThemeControls() {
   const theme = useTheme();
@@ -43,20 +43,19 @@ export default function ThemeControls() {
     {createPortal(<dialog id="appearance-settings" className="settings-panel" ref={dialogRef}
       aria-labelledby="settings-title" aria-describedby="settings-description" onClick={handleBackdropClick} onKeyDown={keepFocusInPanel}
       onClose={() => { setOpen(false); triggerRef.current?.focus(); }}>
-      <header className="settings-heading">
+      <div className="settings-top"><header className="settings-heading">
         <div><p className="eyebrow">Make it yours</p><h2 id="settings-title">Appearance</h2></div>
         <button type="button" className="icon-button settings-close" onClick={closeSettings} aria-label="Close settings"><HiXMark aria-hidden="true" /></button>
       </header>
-      <p id="settings-description" className="muted small">Your space. Your style. Saved as you choose.</p>
+      <p id="settings-description" className="muted small">Your space. Your style. Saved as you choose.</p></div>
       <div className="settings-categories">
         {appearanceCategories.map((category) => {
-          const followsSystem = category.key === 'effects' && theme.systemReducedMotion;
-          const selected = followsSystem ? 'reduced' : theme[category.key];
-          return <fieldset className="settings-category" key={category.key} disabled={followsSystem}
+          const selected = theme[category.key];
+          return <fieldset className={`settings-category settings-category--${category.key}`} key={category.key}
             aria-describedby={`setting-description-${category.key}`}>
             <legend>{category.label}</legend>
             <p className="muted small" id={`setting-description-${category.key}`}>
-              {followsSystem ? 'Reduced motion is enabled on your device.' : category.description}
+              {category.description}
             </p>
             <div className="setting-options">
               {category.options.map((option) => {
@@ -78,7 +77,7 @@ export default function ThemeControls() {
           </fieldset>;
         })}
       </div>
-      <button type="button" className="button button--primary settings-done" onClick={closeSettings}>Done</button>
+      <div className="settings-bottom"><button type="button" className="button button--primary settings-done" onClick={closeSettings}>Done</button></div>
     </dialog>, document.body)}
   </>;
 }

@@ -22,7 +22,9 @@ function send(method, params = {}) {
 }
 let apiMode = 'success';
 const fixture = JSON.parse(await readFile(new URL('../src/data/fallbackPortfolio.json', import.meta.url), 'utf8'));
-fixture.projects = Array.from({ length: 5 }, (_, i) => ({ ...fixture.projects[0], title: `Project ${i + 1}`, image: '/missing-preview.jpg' }));
+fixture.skills.push({ name: 123 });
+fixture.social.twitter = 'javascript:alert(1)';
+fixture.projects = Array.from({ length: 5 }, (_, i) => ({ ...fixture.projects[0], title: `Project ${i + 1}`, image: `${base}/missing-preview.jpg` }));
 ws.onmessage = async ({ data }) => {
   const message = JSON.parse(data);
   if (message.id) {
@@ -40,7 +42,7 @@ ws.onmessage = async ({ data }) => {
       if (request.url.includes('/portfolio/aaravharithas/')) {
         if (apiMode === 'stall') return;
         await send('Fetch.fulfillRequest', { requestId, responseCode: apiMode === 'error' ? 503 : 200,
-          responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from(JSON.stringify(fixture)).toString('base64') });
+          responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from(JSON.stringify(apiMode === 'invalid' ? { name: 123 } : fixture)).toString('base64') });
       } else await send('Fetch.continueRequest', { requestId });
     } catch { /* A navigation may cancel an intercepted request. */ }
   }
@@ -126,6 +128,22 @@ try {
   await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: 10, y: 300, button: 'left', clickCount: 1 });
   await until(`!document.querySelector('.settings-panel').open`);
 
+  // Scroll reveals leave content visible and animate once when it enters view.
+  await evaluate(`document.querySelector('#contact').scrollIntoView({ behavior: 'instant' })`);
+  await sleep(80);
+  assert.equal(await evaluate(`document.querySelector('#contact').getAnimations().some(a => a.playState === 'running')`), true);
+  await sleep(550);
+  assert.equal(await evaluate(`getComputedStyle(document.querySelector('#contact')).opacity`), '1');
+  assert.notEqual(await evaluate(`getComputedStyle(document.documentElement).scrollbarColor`), 'auto');
+  await evaluate(`window.scrollTo({ top: 0, behavior: 'instant' })`);
+  await sleep(80);
+  const buttonPoint = await evaluate(`(() => { const r = document.querySelector('.hero .button--primary').getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}; })()`);
+  await send('Input.dispatchMouseEvent', { type: 'mousePressed', ...buttonPoint, button: 'left', clickCount: 1 });
+  await sleep(180);
+  assert.notEqual(await evaluate(`getComputedStyle(document.querySelector('.hero .button--primary')).transform`), 'none');
+  await send('Input.dispatchMouseEvent', { type: 'mouseReleased', ...buttonPoint, button: 'left', clickCount: 1 });
+  await sleep(700);
+
   // Form, tab, and pagination state survive material and color changes.
   await evaluate(`(() => { const input = document.querySelector('input[name="name"]'); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, 'Theme switch test'); input.dispatchEvent(new Event('input', { bubbles: true })); })()`);
   await click('#tab-experience');
@@ -141,17 +159,25 @@ try {
       assert.equal(await evaluate('document.querySelector("#tab-experience").getAttribute("aria-selected")'), 'true');
       assert.equal(await evaluate('document.querySelector(".pagination span").textContent'), '2 / 2');
       assert.equal(await evaluate(`getComputedStyle(document.querySelector('.project-card')).backdropFilter`), design === 'glass' ? 'blur(10px)' : 'none');
-      assert.equal(await evaluate(`document.querySelector('.hero-profile') !== null`), design !== 'glass');
+      assert.equal(await evaluate(`document.querySelector('.hero-profile') !== null`), ['clay', 'neumorphism'].includes(design));
       if (design !== 'glass') assert.equal(await evaluate(`[...document.querySelectorAll('body *')].some(element => getComputedStyle(element).backdropFilter !== 'none')`), false);
       await closeSettings();
       await evaluate('window.scrollTo(0, 0)');
       await sleep(500);
       await screenshot(`${design}-${mode}-desktop`);
       for (const width of [320, 390, 768, 1024, 1440]) {
-        await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: false });
+        await send('Emulation.setDeviceMetricsOverride', { width, height: width === 320 ? 568 : 900, deviceScaleFactor: 1, mobile: false });
         await sleep(100);
         const overflow = await evaluate('document.documentElement.scrollWidth > window.innerWidth');
         assert.equal(overflow, false, `${design}/${mode} overflows at ${width}px`);
+        if (width === 320) {
+          await openSettings();
+          assert.equal(await evaluate(`document.querySelector('.settings-done').getBoundingClientRect().bottom <= innerHeight`), true, 'Done stays visible on short screens');
+          await evaluate(`document.querySelector('.settings-categories').scrollTop = 10000`);
+          assert.equal(await evaluate(`document.querySelector('.settings-close').getBoundingClientRect().top >= 0`), true);
+          await screenshot(`${design}-${mode}-settings-short`);
+          await closeSettings();
+        }
         if (width === 390) {
           await screenshot(`${design}-${mode}-mobile`);
           await openSettings();
@@ -166,21 +192,22 @@ try {
   await until(`document.querySelector('.settings-trigger')`);
   assert.equal(await evaluate('document.documentElement.dataset.design'), 'neumorphism');
   assert.equal(await evaluate('document.documentElement.dataset.mode'), 'dark');
-  await choose('effects', 'reduced');
-  assert.equal(await evaluate('document.documentElement.dataset.motion'), 'reduced');
-  await navigate('Page.reload');
-  await until(`document.querySelector('.settings-trigger')`);
-  assert.equal(await evaluate('document.documentElement.dataset.motion'), 'reduced');
-  await choose('effects', 'full');
+  assert.equal(await evaluate('document.documentElement.dataset.motion'), 'full');
+  assert.equal(await evaluate(`document.querySelector('input[name=effects]')`), null);
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   await until(`document.documentElement.dataset.motion === 'reduced'`);
-  assert.equal(await evaluate(`document.querySelector('input[name=effects]').matches(':disabled')`), true);
+  assert.equal(await evaluate(`getComputedStyle(document.documentElement).scrollBehavior`), 'auto');
   assert.equal(await evaluate('document.getAnimations().filter(a => a.playState === "running").length'), 0);
   // API failure and a never-finishing request both leave content immediately usable.
   apiMode = 'error';
   await navigate('Page.reload');
   await until(`document.querySelector('.footer-meta [role="status"]')`);
   assert.equal(await evaluate('document.querySelector("h1").textContent.includes("Gaurav")'), true);
+  assert.equal(await evaluate('document.querySelectorAll(".project-card").length'), 3, 'Cached API projects survive reload during outage');
+  apiMode = 'invalid';
+  await navigate('Page.reload');
+  await until(`document.querySelector('.footer-meta [role="status"]')`);
+  assert.equal(await evaluate('document.querySelectorAll(".project-card").length'), 3, 'Malformed response does not replace cached content');
   apiMode = 'stall';
   await navigate('Page.reload');
   await until(`document.querySelector('h1') && document.querySelector('.settings-trigger')`);

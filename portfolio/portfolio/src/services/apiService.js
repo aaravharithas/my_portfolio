@@ -1,8 +1,8 @@
-import fallbackPortfolio from '../data/fallbackPortfolio.json';
+import { normalizePortfolio } from '../utils/portfolioData.js';
 
-const API_URL = import.meta.env.DEV
-  ? '/api/portfolio/aaravharithas/'
-  : 'https://portfolioapi.pythonanywhere.com/portfolio/aaravharithas/';
+const username = encodeURIComponent(import.meta.env.VITE_PORTFOLIO_USERNAME || 'aaravharithas');
+const base = (import.meta.env.VITE_PORTFOLIO_API_BASE_URL || (import.meta.env.DEV ? '/api' : 'https://portfolioapi.pythonanywhere.com')).replace(/\/$/, '');
+export const API_URL = `${base}/portfolio/${username}/`;
 
 export async function fetchPortfolioData(signal) {
   const controller = new AbortController();
@@ -14,13 +14,7 @@ export async function fetchPortfolioData(signal) {
     const response = await fetch(API_URL, { signal: controller.signal });
     if (!response.ok) throw new Error(`Portfolio request failed: ${response.status}`);
     const data = await response.json();
-    if (!data || typeof data !== 'object' || Array.isArray(data) || typeof data.name !== 'string') {
-      throw new Error('Invalid portfolio response');
-    }
-    return { ...fallbackPortfolio, ...data,
-      ...Object.fromEntries(['projects', 'education', 'experience', 'skills'].map((key) =>
-        [key, Array.isArray(data[key]) ? data[key].filter((item) => item && typeof item === 'object') : fallbackPortfolio[key]])),
-    };
+    return normalizePortfolio(data);
   } finally {
     clearTimeout(timeout);
     signal?.removeEventListener('abort', abort);

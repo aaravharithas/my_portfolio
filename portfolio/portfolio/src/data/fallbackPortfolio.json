@@ -9,13 +9,12 @@
   "zipCode": "122001",
   "email": "aaravharithas@gmail.com",
   "phone": "9321666720",
-  "aboutMe": "I am a fullstack python developer. mainly focused on python.",
+  "aboutMe": "I build full-stack web applications, with a focus on Python and backend development.",
   "profileImage": "https://portfolioapi.pythonanywhere.com/media/user/profile_pics/default.jpg",
   "cvLink": "https://portfolioapi.pythonanywhere.com/media/user/resume/default.pdf",
   "social": {
     "linkedin": "https://www.linkedin.com/in/aaravharithas/",
-    "instagram": "https://www.instagram.com/",
-    "twitter": "https://www.twitter.com/"
+    "instagram": "https://www.instagram.com/aaravharithas"
   },
   "education": [
     {

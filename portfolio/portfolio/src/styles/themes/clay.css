@@ -22,6 +22,10 @@
   --portrait-bg: #e1d4e8;
 }
 [data-design="clay"][data-mode="dark"] {
+  --control-border: #92809f;
+  --selected-bg: #4f3d62;
+  --selected-muted: #d3c5e0;
+  --nav-active-bg: #4f3d62;
   --page-bg: #25232c;
   --text: #f2eaf5;
   --muted: #bdb0c7;

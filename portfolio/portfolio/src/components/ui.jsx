@@ -22,7 +22,7 @@ export function Field({ label, name, multiline = false, ...props }) {
 
 export function SectionHeading({ number, title, description }) {
   return <header className="section-heading">
-    <p className="eyebrow"><span>{number}</span> / {title}</p>
+    <p className="eyebrow"><span>{number}</span> / {{ '01': 'About', '02': 'Journey', '03': 'Skills', '04': 'Projects', '05': 'Contact' }[number] || 'Portfolio'}</p>
     <h2>{title}</h2>
     {description && <p className="muted">{description}</p>}
   </header>;
