@@ -1,7 +1,7 @@
 import { isValidPreference } from '../config/appearance.js';
 
 export function readPreferences(storage, prefersDark = false) {
-  const defaults = { designTheme: 'clay', colorMode: prefersDark ? 'dark' : 'light', effects: 'full' };
+  const defaults = { designTheme: 'clay', colorMode: prefersDark ? 'dark' : 'light' };
   try {
     const saved = JSON.parse(storage?.getItem('portfolio-appearance') || '{}');
     defaults.colorMode = isValidPreference('colorMode', storage?.getItem('theme'))
@@ -26,7 +26,7 @@ export function applyPreferences(preferences, systemReducedMotion) {
   const root = document.documentElement;
   root.dataset.design = preferences.designTheme;
   root.dataset.mode = preferences.colorMode;
-  root.dataset.motion = systemReducedMotion || preferences.effects === 'reduced' ? 'reduced' : 'full';
+  root.dataset.motion = systemReducedMotion ? 'reduced' : 'full';
   root.classList.toggle('dark', preferences.colorMode === 'dark');
   root.style.colorScheme = preferences.colorMode;
 }

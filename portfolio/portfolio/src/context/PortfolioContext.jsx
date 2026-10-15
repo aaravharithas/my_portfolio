@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
-import { fetchPortfolioData } from '../services/apiService.js';
+import { API_URL, fetchPortfolioData } from '../services/apiService.js';
 import fallbackPortfolio from '../data/fallbackPortfolio.json';
+import { normalizePortfolio, readPortfolioCache, savePortfolioCache } from '../utils/portfolioData.js';
 import { PortfolioContext } from './portfolioState.js';
 
+function storage() {
+  try { return window.localStorage; } catch { return null; }
+}
+const bundled = normalizePortfolio(fallbackPortfolio);
+
 export function PortfolioProvider({ children }) {
-  const [portfolioData, setPortfolioData] = useState(fallbackPortfolio);
+  const [portfolioData, setPortfolioData] = useState(() => readPortfolioCache(storage(), API_URL)?.data || bundled);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [request, setRequest] = useState(0);
@@ -15,10 +21,11 @@ export function PortfolioProvider({ children }) {
       .then((data) => {
         if (controller.signal.aborted) return;
         setPortfolioData(data);
+        savePortfolioCache(storage(), API_URL, data);
         setError(null);
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError('Live updates are unavailable. Showing saved portfolio content.');
+        if (!controller.signal.aborted) setError('Live updates are unavailable. Showing the last available portfolio content.');
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);

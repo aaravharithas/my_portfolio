@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import { useScrollReveal } from './hooks/useScrollReveal.js';
 import Navbar from './components/Navbar.jsx';
 import HeroSection from './components/HeroSection.jsx';
 import AboutSection from './components/AboutSection.jsx';
@@ -9,11 +11,13 @@ import Footer from './components/Footer.jsx';
 import { PortfolioProvider } from './context/PortfolioContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 
-export default function App() {
-  return <ThemeProvider><PortfolioProvider>
+function PortfolioPage() {
+  const mainRef = useRef(null);
+  useScrollReveal(mainRef);
+  return <>
     <a className="skip-link" href="#main">Skip to content</a>
     <Navbar />
-    <main id="main" tabIndex={-1}>
+    <main id="main" tabIndex={-1} ref={mainRef}>
       <HeroSection />
       <AboutSection />
       <EducationExperienceSection />
@@ -22,5 +26,9 @@ export default function App() {
       <ContactSection />
     </main>
     <Footer />
-  </PortfolioProvider></ThemeProvider>;
+  </>;
+}
+
+export default function App() {
+  return <ThemeProvider><PortfolioProvider><PortfolioPage /></PortfolioProvider></ThemeProvider>;
 }

@@ -3,7 +3,8 @@ import { usePortfolio } from '../context/usePortfolio.js';
 import { Badge, SectionHeading, Surface } from './ui.jsx';
 
 function formatDate(value) {
-  if (!value || value === 'Present') return 'Present';
+  if (!value) return 'Date not specified';
+  if (value === 'Present') return 'Present';
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 }

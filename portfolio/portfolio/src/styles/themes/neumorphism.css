@@ -22,6 +22,10 @@
   --portrait-bg: #e8ecf0;
 }
 [data-design="neumorphism"][data-mode="dark"] {
+  --control-border: #77879c;
+  --selected-bg: #3d5069;
+  --selected-muted: #cfdae8;
+  --nav-active-bg: #3d5069;
   --page-bg: #292f38;
   --text: #edf1f6;
   --muted: #b6c1ce;

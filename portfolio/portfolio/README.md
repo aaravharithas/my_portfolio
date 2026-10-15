@@ -1,66 +1,79 @@
-# Portfolio
+# Portfolio — Next.js
 
-A React 19 + Vite portfolio with three complete design styles: monochrome frosted glass, soft sculpted clay, and tactile neumorphism. All support light and dark color modes. The Settings button opens an appearance panel with Day / Night, Design Style, and Motion categories on desktop and mobile. Choices are saved immediately; Done, Escape, or a click outside closes the panel.
+Skiper-inspired portfolio built to the supplied spec: Next.js App Router, TypeScript, Tailwind v4, shadcn/ui Command and Dialog, Motion and Lucide icons. Data comes from `https://portfolioapi.pythonanywhere.com/portfolio/aaravharithas/`.
 
-## Development
+## Run
 
-Use Node.js 22.12+ (or a newer supported LTS release).
+Use Node.js 20.9 or newer (verified with Node 24).
 
 ```sh
 npm ci
 npm run dev
+npm run typecheck
 npm run build
-npm run preview
-npm run lint
-npm test
+npm start
 ```
 
-Vite prints the local URL. The production site is generated in `dist/`. This project uses Vite; the old Next.js configuration has been removed. The legacy tracked `out/` directory is not used by the app or lint checks.
+Open http://localhost:3000. Google Fonts are downloaded at build time by `next/font` and served locally. The API must be reachable from the Next.js server.
 
-## Appearance architecture
+## What's built
 
-Clay is the default for visitors without a valid saved design preference. Previously saved choices are preserved.
+Styled to match skiper-ui.com (values measured from the live site; no Skiper assets, fonts or paid code).
 
-- `src/config/appearance.js` is the shared catalog for settings categories and options. The panel, provider, and stored-preference validation all use it.
-- `src/context/ThemeContext.jsx` manages `designTheme` (`glass` / `clay` / `neumorphism`), `colorMode` (`light` / `dark`), and `effects` (`full` / `reduced`).
-- `src/utils/preferences.js` validates and persists settings under `portfolio-appearance`, migrates the old `theme` setting, and applies root data attributes. Storage failure does not prevent theme switching.
-- `src/styles/themes/glass.css`, `clay.css`, and `neumorphism.css` define semantic surface, text, border, shadow, radius, and control variables. Clay and Neumorphism also define layout and material variants.
-- `src/components/ui.jsx` contains the shared `Surface`, `Button`, `Badge`, `Field`, `SectionHeading`, and `PortfolioImage` components.
-- `src/index.css` contains shared component styles and responsive behavior. Tailwind's `dark:` variant follows the same `.dark` class as the selected color mode.
+- Tokens, fonts (Inter, League Spartan 700, Cinzel, Geist Mono), dark-only shell, hidden scrollbars, 200/300px section spacing.
+- Floating 744×54 glass navbar; ⌘K / Ctrl+K / `/` opens an attached command palette (Pages, Links, Download CV, Copy email).
+- Hero: #101010 → wavy blue edge → cyan floor built from a gradient plus seven drifting blurred layers (blue blobs, dark pockets, a bright plume), ending in a hard edge; slot-machine letter roll (6–22 copies per letter, server-randomised so it hydrates cleanly); `pip install <name>/backend` pill that copies the email; Download CV.
+- Centred word-by-word blur headings on every section (no numbered eyebrows).
+- About bento card; Projects with media + label cards, details on hover, adaptive layout (1 → full-width card, 2 → pair, 3+ → bento).
+- Experience as a narrow centred link list; rows expand to description and location.
+- Skills: dashed dividers, CORE marquee (value ≥ 80, pauses on hover/focus), ALSO WORKS WITH row, % tooltips, CV link.
+- Education as pricing-style cards with a cyan glow on the most recent one.
+- Footer: scalloped laurel badge with rotating text ring and rotateY profile, scroll-driven side shapes, single credit line.
+- `prefers-reduced-motion`: static name and background, no marquee, badge spin or scroll shapes, headings shown immediately.
+- Server fetch with one-hour revalidation, 20s timeout, loading skeleton and retry fallback.
 
-Changing the design preserves contact input, the selected journey tab, and the project page. Components with interaction state stay mounted. The hero adds a profile panel in Clay and Neumorphism modes; the journey, project, about, skills, and contact layouts also adapt.
+## Structure
 
-To introduce another design, add its token stylesheet and layout rules, import that stylesheet in `index.css`, and add an option to the `designTheme` category in `src/config/appearance.js`. The settings UI, provider, and validation recognize it automatically. A `preview` value can select a CSS material thumbnail; previews live in `src/styles/settings.css`. Prefer CSS layout changes on existing content nodes; use a React variant only when the structure actually differs. Keep interaction state above any replaced subtree.
+```text
+app/
+  globals.css  layout.tsx  page.tsx  loading.tsx  error.tsx
+  cv/route.ts                 same-origin CV download
+components/
+  navbar.tsx  hero.tsx  about.tsx  projects.tsx  experience.tsx
+  skills.tsx  education.tsx  footer.tsx
+  section-heading.tsx         word-reveal heading
+  portfolio-image.tsx  motion-provider.tsx
+  ui/command.tsx  ui/dialog.tsx
+lib/
+  portfolio.ts                server fetch (server-only)
+  portfolio-data.ts           normalisation, privacy projection, project layout
+  dates.ts                    "April 8, 2025" → "Apr 2025", Present handling
+  navigation.ts               page anchors, safe/bare-domain URL filter
+  utils.ts
+types/portfolio.ts
+tests/
+  portfolio-data.test.mjs     unit tests (npm test)
+  portfolio-browser.mjs       Chrome CDP checks (npm run test:browser)
+```
 
-## Rendering and motion
+The server loader projects only explicitly allowed fields. Birth date, address, postcode and phone are discarded before rendering or client serialization. Email is supplied only to the copy action; it is not visible text or a mailto link. This is a display rule, not a claim that the public API email is secret.
 
-There are no particle canvases, custom cursor loops, animated gradients, or blocking intro screens. Glass uses an Apple-inspired monochrome palette, system typography, static neutral lighting, fine reflective borders, and a silver profile illustration. Fixed backdrop blur is limited to navigation, the front profile pane, project cards, the about panel, and the contact panel (10px desktop, 6px mobile). The rear decorative pane, skill tiles, and timeline cards use gradients without blur. Controls inside surfaces do not add nested blur. Clay and Neumorphism use no backdrop blur. Neumorphism uses a continuous cool-gray material with paired light and dark shadows, raised panels, recessed inputs, and a circular inset portrait. Browsers without backdrop-filter support receive opaque surfaces.
+Bare-domain social links are omitted. The API has no profile GitHub field, so the GitHub command uses its first valid project repository. The CV route only retrieves media from the specified API host.
 
-Full motion consists of a brief hero entrance and small interaction transitions. Reduced motion disables animations, transitions, and smooth scrolling. The operating system's reduced-motion preference always takes precedence. Motion settings persist separately from design and color.
+The API currently identifies the owner as Gaurav Sharma, username aaravharithas. The introduction typo `manily` still needs correction in the backend/CMS; this workspace has no backend write access.
 
-## Portfolio data and contact
+## Retained Vite implementation
 
-Edit `src/data/fallbackPortfolio.json` to update the bundled content. It renders immediately while `src/services/apiService.js` fetches live data. Development uses the `/api` proxy in `vite.config.js`; production requests the configured API directly. Requests time out after six seconds and are cancelled on unmount. An unavailable API leaves saved content visible and provides a retry action in the footer.
-
-Failed or missing images render a local, theme-aware initial placeholder without another network request. Skill icons are bundled SVGs, with a generic icon for unrecognized skills.
-
-The contact form opens an email draft using `mailto:`. It does not send email or claim delivery. Form values remain available if the visitor cancels their email app. A delivery backend can be added separately.
+`src/`, the Vite configuration, assets and the old tests remain intact. Use `npm run dev:legacy`, `npm run build:legacy`, `npm run test:legacy` and `npm run test:browser:legacy` for that app. Its documentation is preserved in [docs/LEGACY_VITE.md](docs/LEGACY_VITE.md).
 
 ## Verification
 
-`npm test` covers appearance defaults, persisted preferences, legacy migration, invalid values, and blocked storage.
-
-The browser integration check uses Node's built-in WebSocket client and a disposable Chrome profile; no browser-test dependency is required. In separate terminals:
+`npm test`, `npm run typecheck`, `npm run lint` and `npm run build` validate the app. The browser check uses system Chrome and Node's built-in WebSocket:
 
 ```sh
-npm run dev -- --host 127.0.0.1 --port 5175
-
-google-chrome --headless --remote-debugging-port=9225 \
-  --user-data-dir=/tmp/portfolio-theme-check about:blank
-
-PORTFOLIO_URL=http://127.0.0.1:5175 npm run test:browser
+npm run build && npm start -- --hostname 127.0.0.1 --port 3005
+google-chrome --headless --no-first-run --remote-debugging-port=9226 --user-data-dir=/tmp/portfolio-chrome about:blank
+npm run test:browser
 ```
 
-Use a separate Chrome profile: the test clears local storage for the tested origin. It mocks the API, checks all six appearance combinations at 320, 390, 768, 1024, and 1440px, checks the settings dialog’s focus cycle, Escape/backdrop dismissal, radio-keyboard selection, state preservation and persistence, and exercises reduced motion, broken images, failed/stalled API requests, and blocked storage. Screenshots are written to `/tmp/portfolio-theme-screenshots`.
-
-For runtime performance comparisons, record scrolling and idle time on the same device and browser. Bundle sizes alone do not establish frame-rate or battery improvements.
+Run the three commands in separate terminals. Checks cover 375, 768 and 1280px overflow, palette alignment, shortcuts, focus restoration, search, anchor navigation, copy success/failure, hidden email text, outside dismissal, reduced motion (marquee, badge, blobs, letter roll), absence of private API fields from the HTML/RSC payload, and runtime exceptions. Screenshots go to `/tmp/portfolio-foundation-screenshots/`.

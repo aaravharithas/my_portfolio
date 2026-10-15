@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #080808;
+  --foreground: #ededed;
+  --muted: #121212;
+  --muted2: #161616;
+  --muted3: #232323;
+  --primary: #0cdcf7;
+  --blue: oklch(0.6 0.25 260);
+  --border: oklch(1 0 0 / 10%);
+  --shadow-glass:
+    #ffffff08 0 7.26px 14.51px 0 inset,
+    #ffffff0f 0 .5px .5px 0 inset,
+    #ffffff1f 0 .25px .25px 0 inset,
+    #0000005e 0 14.21px 20.28px -5.48px;
+  --card: var(--muted);
+  --card-foreground: var(--foreground);
+  --popover: var(--muted);
+  --popover-foreground: var(--foreground);
+  --primary-foreground: var(--background);
+  --secondary: var(--muted3);
+  --secondary-foreground: var(--foreground);
+  --muted-foreground: oklch(1 0 0 / 55%);
+  --accent: var(--muted3);
+  --accent-foreground: var(--foreground);
+  --destructive: var(--primary);
+  --input: var(--border);
+  --ring: var(--primary);
+  --radius: 1rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted2: var(--muted2);
+  --color-muted3: var(--muted3);
+  --color-primary: var(--primary);
+  --color-blue: var(--blue);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-spartan);
+  --font-serif: var(--font-cinzel);
+  --font-mono: var(--font-geist-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: 1rem;
+  --shadow-glass: var(--shadow-glass);
+}
+
+@theme {
+  --animate-marquee: marquee var(--duration, 40s) linear infinite;
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-100% - var(--gap))); }
+  }
+}
+
+@layer base {
+  * { @apply border-border; scrollbar-width: none; }
+  ::-webkit-scrollbar { display: none; }
+  html { color-scheme: dark; scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  body { @apply bg-background text-foreground font-sans text-base leading-6 antialiased; }
+  ::selection { color: #64c6ff; background: rgba(131, 209, 255, .25); }
+  :focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+  button, a { -webkit-tap-highlight-color: transparent; }
+  button:not(:disabled), [role="option"] { cursor: pointer; }
+}
+
+@layer components {
+  .section-stack { @apply space-y-[200px] md:space-y-[300px]; }
+  .section-heading { @apply max-w-lg px-5 text-[28px] leading-[28px] font-semibold tracking-tighter md:text-[38px] md:leading-[38px]; }
+  .section-copy { @apply max-w-lg text-sm tracking-[-0.16px] text-foreground/60 md:text-[16px] md:leading-[21px]; }
+  .eyebrow { @apply my-4 font-serif text-sm leading-5 tracking-widest uppercase; }
+  .display-name { @apply font-display text-5xl leading-none font-bold tracking-[-0.04em] uppercase sm:text-7xl lg:text-8xl; }
+  .primary-button { @apply inline-flex h-12 items-center justify-center rounded-2xl bg-blue px-5 text-[15px] font-medium text-white transition-opacity hover:opacity-85; }
+  .icon-button { @apply inline-flex size-8 shrink-0 items-center justify-center rounded-[12px] bg-muted3 text-foreground transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-30; }
+  .bento-card { @apply flex flex-col rounded-[20px] border border-muted bg-muted p-3 shadow-glass transition-colors hover:bg-muted2; }
+}
+
+/* Hero "smoke" edge standing in for Skiper's video. Pockets come after the blue blobs and before the plume. */
+.hero-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #101010; }
+.hero-floor { position: absolute; inset: 0; background: linear-gradient(to top, #00dcfe 0%, #00dcfe 14%, #03d5ff 18%, #0eb2ff 26%, #1685e9 34%, #1958b7 40%, rgba(25, 65, 139, .55) 45%, transparent 52%); }
+.hb { position: absolute; border-radius: 50%; filter: blur(40px); will-change: transform; animation: hero-drift ease-in-out infinite alternate; }
+.hb-navy { left: -10%; top: 52%; width: 45%; height: 28%; background: radial-gradient(closest-side, #132446 55%, transparent); animation-duration: 26s; }
+.hb-blue { left: -5%; top: 60%; width: 50%; height: 22%; background: radial-gradient(closest-side, #1685e9 45%, transparent); animation-duration: 31s; animation-delay: -8s; }
+.hb-deep { left: 75%; top: 62%; width: 35%; height: 20%; background: radial-gradient(closest-side, #19418b 45%, transparent); animation-duration: 23s; animation-delay: -4s; }
+.hb-pocketL { left: 15%; top: 46%; width: 35%; height: 20%; background: radial-gradient(closest-side, #101010 55%, transparent); animation-duration: 29s; animation-delay: -12s; }
+.hb-pocketR { left: 85%; top: 47%; width: 30%; height: 22%; background: radial-gradient(closest-side, #101010 55%, transparent); animation-duration: 34s; animation-delay: -6s; }
+.hb-plume { left: 55%; top: 44%; width: 28%; height: 36%; background: radial-gradient(closest-side, #187be2 45%, transparent); animation-duration: 21s; }
+.hb-core { left: 62%; top: 58%; width: 22%; height: 25%; background: radial-gradient(closest-side, #07c6fe 35%, transparent); animation-duration: 25s; animation-delay: -10s; }
+@keyframes hero-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6%, -6%) scale(1.15); }
+  100% { transform: translate(-4%, 3%) scale(.95); }
+}
+
+/* Footer side objects: dark chrome with blue/cyan rim light. */
+.shape-capsule { border-radius: 9999px; background: linear-gradient(170deg, #3d3d3d 0%, #181818 45%, #0a0a0a 100%); box-shadow: inset 0 -16px 30px rgba(0, 114, 255, .45), inset 0 10px 18px rgba(255, 255, 255, .12), 0 30px 60px -20px rgba(0, 114, 255, .4); }
+.shape-orb { border-radius: 50%; background: radial-gradient(circle at 30% 25%, #5a5a5a, #1c1c1c 35%, #090909 70%); box-shadow: inset -8px -10px 18px rgba(12, 220, 247, .4), 0 20px 40px -10px rgba(0, 114, 255, .35); }
+.shape-ring { border-radius: 50%; background: radial-gradient(circle at 32% 28%, #555, #1a1a1a 40%, #0a0a0a 70%); box-shadow: inset -12px -16px 28px rgba(12, 220, 247, .4), inset 10px 12px 20px rgba(255, 255, 255, .12); mask: radial-gradient(circle, transparent 33%, #000 34%); }
+
+/* Layer overhangs the card by 80px (-inset-20) so the blur doesn't fade the corner; the gradient is re-centred on the card's corner.
+   Radii are 60%×50% of the ~330×464 card in px, because Chrome rejects calc() in gradient sizes. */
+.education-glow { background: radial-gradient(198px 232px at 80px calc(100% - 80px), #00dcfe 0%, #1685e9 45%, transparent 75%); filter: blur(40px); }
+.badge-ring { animation: badge-spin 30s linear infinite; }
+@keyframes badge-spin { to { transform: rotate(360deg); } }
+.badge-flip { animation: badge-flip 12s linear infinite; }
+@keyframes badge-flip { to { transform: rotateY(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .letter-column { transform: none !important; }
+  .reveal-word, .section-intro p { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .marquee-group { flex-wrap: wrap; justify-content: center; row-gap: .5rem; }
+  .marquee-group[aria-hidden="true"], .marquee-fade { display: none; }
+}

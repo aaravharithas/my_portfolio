@@ -1,6 +1,10 @@
 /* Monochrome glass: neutral light, fine edges, and restrained frosted surfaces. */
 :root,
 [data-design="glass"] {
+  --control-border: var(--line);
+  --selected-bg: var(--accent-soft);
+  --selected-muted: var(--muted);
+  --nav-active-bg: var(--control);
   --page-bg: #f5f5f7;
   --text: #1d1d1f;
   --muted: #626266;
@@ -29,6 +33,10 @@
   --glass-glow: rgba(255, 255, 255, .1);
 }
 [data-design="glass"][data-mode="dark"] {
+  --control-border: #77777c;
+  --selected-bg: #38383c;
+  --selected-muted: #bdbdc4;
+  --nav-active-bg: #38383c;
   --page-bg: #080808;
   --text: #f5f5f7;
   --muted: #a1a1a6;

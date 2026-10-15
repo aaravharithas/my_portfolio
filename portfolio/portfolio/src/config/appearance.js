@@ -15,13 +15,7 @@ export const appearanceCategories = [
       { value: 'neumorphism', label: 'Neumorphism', description: 'Raised & recessed', preview: 'neumorphism' },
     ],
   },
-  {
-    key: 'effects', label: 'Motion', description: 'Choose your pace.',
-    options: [
-      { value: 'full', label: 'Subtle', description: 'A little movement', icon: 'sparkles' },
-      { value: 'reduced', label: 'Still', description: 'Keep things calm', icon: 'still' },
-    ],
-  },
+
 ];
 
 export function isValidPreference(key, value) {

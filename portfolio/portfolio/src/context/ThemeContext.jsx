@@ -23,7 +23,7 @@ export function ThemeProvider({ children }) {
   const value = {
     ...preferences,
     systemReducedMotion,
-    reducedMotion: systemReducedMotion || preferences.effects === 'reduced',
+    reducedMotion: systemReducedMotion,
     setPreference: (key, value) => {
       if (isValidPreference(key, value)) setPreferences((p) => ({ ...p, [key]: value }));
     },
