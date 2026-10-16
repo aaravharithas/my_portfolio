@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Command as CommandIcon, CornerDownLeft, Download } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { notifyIsland } from "@/components/skiper/dynamic-island";
 import { pages } from "@/lib/navigation";
 import type { NavigationProfile } from "@/types/portfolio";
 
@@ -36,6 +37,7 @@ export function Navbar({ profile }: { profile: NavigationProfile }) {
     try {
       await navigator.clipboard.writeText(profile.email);
       setCopyStatus("Email copied to clipboard.");
+      notifyIsland({ kind: "copied", label: "Email copied" });
     } catch {
       setCopyStatus("Copy failed. Check clipboard permission and try again.");
     }

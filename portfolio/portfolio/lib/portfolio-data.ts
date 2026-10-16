@@ -15,17 +15,13 @@ export function mediaUrl(value: unknown): string {
   return url.protocol === "https:" && url.hostname === "portfolioapi.pythonanywhere.com" && url.pathname.startsWith("/media/") ? valid : "";
 }
 
-export function projectLayout(count: number): "feature" | "pair" | "bento" {
-  return count <= 1 ? "feature" : count === 2 ? "pair" : "bento";
-}
-
 // Explicit projection keeps private API fields out of HTML and client props.
 export function normalizePortfolio(input: unknown): PublicPortfolio {
   const data = record(input);
   if (!text(data.name)) throw new Error("Portfolio data is missing a name.");
   const social = record(data.social);
   const projects: Portfolio["projects"] = collection(data.projects).filter(item => text(item.title)).map(item => ({
-    title: text(item.title), image: mediaUrl(item.image), link: safeUrl(item.link) ?? "", github: safeUrl(item.github, true) ?? "",
+    title: text(item.title), image: mediaUrl(item.image), video: mediaUrl(item.video), link: safeUrl(item.link) ?? "", github: safeUrl(item.github, true) ?? "",
     metadata: text(item.metadata), description: text(item.description),
     tech_stack: Array.isArray(item.tech_stack) ? [...new Set(item.tech_stack.map(text).filter(Boolean))] : [],
   }));

@@ -58,20 +58,13 @@
   --font-display: var(--font-spartan);
   --font-serif: var(--font-cinzel);
   --font-mono: var(--font-geist-mono);
+  --font-poster: var(--font-anton);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: 1rem;
   --shadow-glass: var(--shadow-glass);
-}
-
-@theme {
-  --animate-marquee: marquee var(--duration, 40s) linear infinite;
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(calc(-100% - var(--gap))); }
-  }
 }
 
 @layer base {
@@ -99,7 +92,10 @@
 /* Hero "smoke" edge standing in for Skiper's video. Pockets come after the blue blobs and before the plume. */
 .hero-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #101010; }
 .hero-floor { position: absolute; inset: 0; background: linear-gradient(to top, #00dcfe 0%, #00dcfe 14%, #03d5ff 18%, #0eb2ff 26%, #1685e9 34%, #1958b7 40%, rgba(25, 65, 139, .55) 45%, transparent 52%); }
-.hb { position: absolute; border-radius: 50%; filter: blur(40px); will-change: transform; animation: hero-drift ease-in-out infinite alternate; }
+/* One blur over all smoke layers instead of one per layer. inset:-60px avoids dark blur edges; the
+   inner inset-[60px] box in hero.tsx restores the hero's size so the % positions below are unchanged. */
+.hero-smoke { position: absolute; inset: -60px; filter: blur(40px); will-change: filter; }
+.hb { position: absolute; border-radius: 50%; will-change: transform; animation: hero-drift ease-in-out infinite alternate; }
 .hb-navy { left: -10%; top: 52%; width: 45%; height: 28%; background: radial-gradient(closest-side, #132446 55%, transparent); animation-duration: 26s; }
 .hb-blue { left: -5%; top: 60%; width: 50%; height: 22%; background: radial-gradient(closest-side, #1685e9 45%, transparent); animation-duration: 31s; animation-delay: -8s; }
 .hb-deep { left: 75%; top: 62%; width: 35%; height: 20%; background: radial-gradient(closest-side, #19418b 45%, transparent); animation-duration: 23s; animation-delay: -4s; }
@@ -118,6 +114,19 @@
 .shape-orb { border-radius: 50%; background: radial-gradient(circle at 30% 25%, #5a5a5a, #1c1c1c 35%, #090909 70%); box-shadow: inset -8px -10px 18px rgba(12, 220, 247, .4), 0 20px 40px -10px rgba(0, 114, 255, .35); }
 .shape-ring { border-radius: 50%; background: radial-gradient(circle at 32% 28%, #555, #1a1a1a 40%, #0a0a0a 70%); box-shadow: inset -12px -16px 28px rgba(12, 220, 247, .4), inset 10px 12px 20px rgba(255, 255, 255, .12); mask: radial-gradient(circle, transparent 33%, #000 34%); }
 
+/* Work bento. Mobile: one column in DOM (fill-priority) order. md/lg: tiles placed by named area;
+   projects beyond the 8 slots auto-flow into extra 322px rows. */
+.bento { grid-auto-rows: 320px; }
+@media (min-width: 768px) {
+  .bento { grid-template-areas: "a c" "e c" "b b" "d d" "g g" "g g" "f f" "h h"; grid-auto-rows: 322px; }
+}
+@media (min-width: 1024px) {
+  .bento { grid-template-areas: "a b b c" "d d e c" "f f g g" "h h g g"; grid-template-rows: 275px 322px 322px 322px; }
+}
+
+/* Film grain for the monochrome photo layer. */
+.grain { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); mix-blend-mode: overlay; opacity: .45; }
+
 /* Layer overhangs the card by 80px (-inset-20) so the blur doesn't fade the corner; the gradient is re-centred on the card's corner.
    Radii are 60%×50% of the ~330×464 card in px, because Chrome rejects calc() in gradient sizes. */
 .education-glow { background: radial-gradient(198px 232px at 80px calc(100% - 80px), #00dcfe 0%, #1685e9 45%, transparent 75%); filter: blur(40px); }
@@ -125,12 +134,15 @@
 @keyframes badge-spin { to { transform: rotate(360deg); } }
 .badge-flip { animation: badge-flip 12s linear infinite; }
 @keyframes badge-flip { to { transform: rotateY(360deg); } }
+/* Toolbox wall idle drift: exactly one 576×672 pattern per loop, so it repeats seamlessly. */
+.toolbox-drift { animation: toolbox-drift 60s linear infinite; will-change: transform; }
+@keyframes toolbox-drift { to { transform: translate(-576px, -672px); } }
+/* Set by <PauseOffscreen> on the hero background, footer badge, bento "Now" island and toolbox wall. */
+.paused * { animation-play-state: paused; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .letter-column { transform: none !important; }
   .reveal-word, .section-intro p { opacity: 1 !important; transform: none !important; filter: none !important; }
-  .marquee-group { flex-wrap: wrap; justify-content: center; row-gap: .5rem; }
-  .marquee-group[aria-hidden="true"], .marquee-fade { display: none; }
 }
