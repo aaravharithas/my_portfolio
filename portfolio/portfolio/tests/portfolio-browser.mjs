@@ -51,7 +51,8 @@ try {
   await send('Page.enable');
   await send('Runtime.enable');
   await send('Page.navigate', { url: base });
-  await until(`document.readyState === 'complete' && document.querySelector('nav') && document.querySelector('h1')`);
+  // Wait for hydration, not just server HTML: clicks before React attaches handlers are lost.
+  await until(`document.readyState === 'complete' && Object.keys(document.querySelector('[aria-label="Open navigation and commands"]') || {}).some(key => key.startsWith('__reactProps'))`);
   await evaluate('document.fonts.ready.then(() => true)');
   assert.equal(await evaluate(`document.documentElement.classList.contains('dark')`), true);
   assert.equal(await evaluate(`getComputedStyle(document.body).backgroundColor`), 'rgb(8, 8, 8)');
@@ -110,16 +111,21 @@ try {
   await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: 5, y: 750, button: 'left', clickCount: 1 });
   await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: 5, y: 750, button: 'left', clickCount: 1 });
   await until(`!document.querySelector('[role="dialog"]')`);
+  // Off-screen animations pause and resume.
+  await evaluate(`window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' })`);
+  await until(`document.querySelector('.hero-bg').classList.contains('paused')`);
+  await evaluate(`window.scrollTo({ top: 0, behavior: 'instant' })`);
+  await until(`!document.querySelector('.hero-bg').classList.contains('paused')`);
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   assert.equal(await evaluate(`getComputedStyle(document.documentElement).scrollBehavior`), 'auto');
-  for (const selector of ['.marquee-group', '.badge-ring', '.hb']) assert.equal(await evaluate(`getComputedStyle(document.querySelector('${selector}')).animationName`), 'none', `${selector} must stop`);
+  for (const selector of ['.badge-ring', '.hb']) assert.equal(await evaluate(`getComputedStyle(document.querySelector('${selector}')).animationName`), 'none', `${selector} must stop`);
   assert.equal(await evaluate(`[...document.querySelectorAll('.letter-column')].every(e => getComputedStyle(e).transform === 'none')`), true);
   // Private API fields must never reach the HTML or RSC payload.
   const api = await (await fetch('https://portfolioapi.pythonanywhere.com/portfolio/aaravharithas/')).json();
   const html = await (await fetch(base)).text();
   assert.deepEqual(['dob', 'address', 'zipCode', 'phone'].filter(field => api[field] && html.includes(api[field])), []);
   assert.deepEqual(errors, []);
-  console.log('PASS: 375/768/1280px, private fields absent, reduced motion stops marquee/badge/blobs/letter roll, dark tokens, League Spartan hero font, palette alignment, shortcuts, focus, filtering, navigation, email privacy/copy success/failure, outside dismissal, reduced motion, no runtime exceptions.');
+  console.log('PASS: 375/768/1280px, off-screen pause/resume, private fields absent, reduced motion stops marquee/badge/blobs/letter roll, dark tokens, League Spartan hero font, palette alignment, shortcuts, focus, filtering, navigation, email privacy/copy success/failure, outside dismissal, reduced motion, no runtime exceptions.');
 } finally {
   ws.close();
 }

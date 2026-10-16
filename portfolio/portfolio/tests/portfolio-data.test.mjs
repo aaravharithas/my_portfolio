@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizePortfolio, projectLayout, mediaUrl } from '../lib/portfolio-data.ts';
+import { normalizePortfolio, mediaUrl } from '../lib/portfolio-data.ts';
 import { dateParts, compactRange, yearRange } from '../lib/dates.ts';
 import { safeUrl } from '../lib/navigation.ts';
 
@@ -16,6 +16,7 @@ test('normalization discards private data and corrects the introduction for disp
   assert.equal(result.twitter, '');
   assert.equal(result.navigation.links.find(item => item.label === 'GitHub').href, project.github);
   assert.deepEqual(result.projects[0].tech_stack, ['Python', 'Django']);
+  assert.equal(normalizePortfolio({ ...base, projects: [{ ...project, video: 'https://evil.example/clip.mp4' }] }).projects[0].video, '', 'videos only from the API media host');
 });
 
 test('dates use deterministic UTC calendar parsing with Present and leap-year support', () => {
@@ -44,13 +45,6 @@ test('skills ignore category, sort by proficiency and reject malformed numbers',
   const result = normalizePortfolio({ ...base, skills: [{ name: 'Low', value: 50 }, { name: 'High', value: 90, category: null }, { name: 'Boundary', value: 80 }, { name: 'Bad', value: '90' }, { name: 'NaN', value: NaN }, { name: 'Clamp', value: 150 }] });
   assert.deepEqual(result.skills.map(item => [item.name, item.value]), [['Clamp', 100], ['High', 90], ['Boundary', 80], ['Low', 50]]);
   assert.equal(result.skills.every(item => item.category === null), true);
-});
-
-test('project layout adapts to 0, 1, 2, 3 and more projects', () => {
-  for (const [count, expected] of [[0, 'feature'], [1, 'feature'], [2, 'pair'], [3, 'bento'], [8, 'bento']]) {
-    const data = normalizePortfolio({ ...base, projects: Array.from({ length: count }, (_, i) => ({ ...project, title: `Project ${i}` })) });
-    assert.equal(projectLayout(data.projects.length), expected);
-  }
 });
 
 test('education is ordered by recency and malformed optional collections are safe', () => {

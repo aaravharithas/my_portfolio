@@ -16,7 +16,7 @@ export type Portfolio = {
   education: { startDate: string; endDate: string; degree: string; institution: string; description: string }[];
   experience: { startDate: string; endDate: string; role: string; company: string; location: string; description: string }[];
   skills: { name: string; value: number; category: string | null }[];
-  projects: { image: string; title: string; link: string; github: string; metadata: string; description: string; tech_stack: string[] }[];
+  projects: { image: string; video?: string; title: string; link: string; github: string; metadata: string; description: string; tech_stack: string[] }[];
 };
 
 // Only this explicit subset crosses into the interactive navbar.

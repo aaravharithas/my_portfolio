@@ -8,7 +8,7 @@
     "build": "next build",
     "lint": "eslint .",
     "preview": "next start",
-    "test": "node --test tests/portfolio-data.test.mjs",
+    "test": "node --test tests/portfolio-data.test.mjs tests/skiper.test.mjs",
     "test:browser": "node tests/portfolio-browser.mjs",
     "start": "next start",
     "typecheck": "tsc --noEmit",

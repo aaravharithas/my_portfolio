@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Copy } from "lucide-react";
+import { PauseOffscreen } from "@/components/pause-offscreen";
+import { notifyIsland } from "@/components/skiper/dynamic-island";
 
 type HeroProps = { name: string; firstName: string; lastName: string; title: string; email: string; cvLink: string; rolls: number[] };
 
@@ -12,18 +14,22 @@ export function Hero({ name, firstName, lastName, title, email, cvLink, rolls }:
   let index = 0;
 
   async function copyEmail() {
-    try { await navigator.clipboard.writeText(email); setStatus("Copied"); }
+    try { await navigator.clipboard.writeText(email); setStatus("Copied"); notifyIsland({ kind: "copied", label: "Email copied" }); }
     catch { setStatus("Copy failed"); }
     setTimeout(() => setStatus(""), 1600);
   }
 
   return <header className="relative isolate flex min-h-svh flex-col items-center justify-center overflow-hidden px-5 text-center">
-    <div aria-hidden="true" className="hero-bg pointer-events-none">
+    <PauseOffscreen aria-hidden="true" className="hero-bg pointer-events-none">
       <div className="hero-floor" />
-      <div className="hb hb-navy" /><div className="hb hb-blue" /><div className="hb hb-deep" />
-      <div className="hb hb-pocketL" /><div className="hb hb-pocketR" />
-      <div className="hb hb-plume" /><div className="hb hb-core" />
-    </div>
+      <div className="hero-smoke">
+        <div className="absolute inset-[60px]">
+          <div className="hb hb-navy" /><div className="hb hb-blue" /><div className="hb hb-deep" />
+          <div className="hb hb-pocketL" /><div className="hb hb-pocketR" />
+          <div className="hb hb-plume" /><div className="hb hb-core" />
+        </div>
+      </div>
+    </PauseOffscreen>
     <div className="relative z-10 mt-20 flex flex-col items-center">
       <p className="eyebrow">Hi, I’m</p>
       <h1 aria-label={name} className="display-name max-w-full">

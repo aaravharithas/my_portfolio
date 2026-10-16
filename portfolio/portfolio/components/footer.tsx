@@ -1,7 +1,10 @@
 "use client";
 
-import { useRef, type RefObject } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import Image from "next/image";
+import { useRef } from "react";
+import { motion, motionValue, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { PauseOffscreen } from "@/components/pause-offscreen";
+import { cn } from "@/lib/utils";
 import { PortfolioImage } from "@/components/portfolio-image";
 import { SectionHeading } from "@/components/section-heading";
 
@@ -22,7 +25,7 @@ const LEAVES = [110, 124, 138, 152, 166, 180, 194, 208, 222]
   .map(({ r, deg, tilt }) => { const [cx, cy] = polar(r, deg); return { cx, cy, rotate: deg + tilt }; });
 
 function Badge({ name, profileImage }: { name: string; profileImage: string }) {
-  return <div className="relative size-[126px]">
+  return <PauseOffscreen className="relative size-[126px]">
     <svg viewBox="0 0 126 126" aria-hidden="true" className="absolute inset-0 size-full">
       <path d={SEAL} fill="var(--muted)" stroke="white" strokeOpacity="0.1" />
       <path d={STEMS} fill="none" stroke="currentColor" strokeOpacity="0.25" strokeWidth="0.6" />
@@ -37,45 +40,59 @@ function Badge({ name, profileImage }: { name: string; profileImage: string }) {
         <PortfolioImage src={profileImage} alt={name} sizes="60px" />
       </div>
     </div>
-  </div>;
+  </PauseOffscreen>;
 }
 
-// Each half slides in from its screen edge toward the badge. The container is centred by the
-// footer's items-center. From lg it shifts 40px right (below lg that would clip the left shape
-// with a hard edge), so the left pad grows by 80px there to keep both shapes ~100px from the badge.
-// The top-[38%] / 1/2 / 55% values line the shapes up with the badge centre at each breakpoint.
-function FooterShapes({ target }: { target: RefObject<HTMLElement | null> }) {
-  const { scrollYProgress } = useScroll({ target, offset: ["start end", "end end"] });
-  const left = useTransform(scrollYProgress, [0, 1], ["-100%", "0%"]);
-  const right = useTransform(scrollYProgress, [0, 1], ["100%", "0%"]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
+const handStyle = { filter: "grayscale(1) brightness(1.1)" };
+// Reduced motion: everything sits in its arrived state.
+const FINAL = motionValue(1);
+
+// The two halves slide in from the screen edges and stop ~24px from the badge. The frame is centred
+// by the footer's items-center. From lg it shifts 40px right (below lg that would clip the left half
+// with a hard edge), so at lg the pads are 87px ± 40px (badge radius 63 + 24px gap). The
+// top-[38%] / 1/2 / 55% values line each half's centre up with the badge centre per breakpoint.
+// With `hands`, public/footer/hand-{left,right}.png fill the halves (fingertips at the inner edge);
+// otherwise the CSS shapes stand in.
+function FooterSides({ progress, hands }: { progress: MotionValue<number> | null; hands: boolean }) {
+  const leftX = useTransform(progress ?? FINAL, [0, 1], [-160, 0]);
+  const rightX = useTransform(progress ?? FINAL, [0, 1], [160, 0]);
+  const leftRotate = useTransform(progress ?? FINAL, [0, 1], [-4, 0]);
+  const rightRotate = useTransform(progress ?? FINAL, [0, 1], [4, 0]);
+  const opacity = useTransform(progress ?? FINAL, [0, 1], [0, 1]);
+  const half = "absolute top-[38%] flex h-[330px] w-1/2 -translate-y-1/2 items-center select-none sm:top-1/2 lg:top-[55%]";
   return <div aria-hidden="true" className="pointer-events-none absolute top-24 h-[500px] w-full max-w-[1300px] overflow-hidden sm:top-16 lg:top-8 lg:translate-x-10">
-    <motion.div style={{ x: left, opacity }} className="absolute top-[38%] left-0 flex h-[330px] w-1/2 -translate-y-1/2 items-center justify-end pr-[100px] sm:top-1/2 lg:top-[55%] lg:pr-[140px]">
-      <div className="relative origin-right scale-50 sm:scale-75 lg:scale-100">
-        <div className="shape-capsule h-[120px] w-[260px] -rotate-[18deg]" />
-        <div className="shape-orb absolute -top-16 left-6 size-16" />
-      </div>
+    <motion.div style={{ x: leftX, rotate: leftRotate, opacity }} className={cn(half, "left-0 justify-end pr-[76px] lg:pr-[127px]")}>
+      {hands ? <div className="relative size-full"><Image src="/footer/hand-left.png" alt="" fill sizes="50vw" className="object-contain object-right" style={handStyle} /></div>
+        : <div className="relative h-[240px] w-[480px] shrink-0 origin-right scale-50 sm:scale-75 lg:scale-100">
+          <div className="shape-capsule absolute top-1/2 right-2 h-[150px] w-[440px] -translate-y-1/2 -rotate-[8deg]" />
+          <div className="shape-orb absolute top-0 left-10 size-20" />
+        </div>}
     </motion.div>
-    <motion.div style={{ x: right, opacity }} className="absolute top-[38%] right-0 flex h-[330px] w-1/2 -translate-y-1/2 items-center justify-start pl-[100px] sm:top-1/2 lg:top-[55%] lg:pl-[60px]">
-      <div className="relative origin-left scale-50 sm:scale-75 lg:scale-100">
-        <div className="shape-ring size-[200px] rotate-12" />
-        <div className="shape-orb absolute right-0 -bottom-6 size-12" />
-      </div>
+    <motion.div style={{ x: rightX, rotate: rightRotate, opacity }} className={cn(half, "right-0 justify-start pl-[76px] lg:pl-[47px]")}>
+      {hands ? <div className="relative size-full"><Image src="/footer/hand-right.png" alt="" fill sizes="50vw" className="object-contain object-left" style={handStyle} /></div>
+        : <div className="relative h-[260px] w-[480px] shrink-0 origin-left scale-50 sm:scale-75 lg:scale-100">
+          <div className="shape-capsule absolute top-[38%] right-0 h-[100px] w-[300px] -translate-y-1/2 rotate-[10deg]" />
+          <div className="shape-ring absolute top-1/2 left-0 size-[240px] -translate-y-1/2" />
+          <div className="shape-orb absolute bottom-0 left-[210px] size-14" />
+        </div>}
     </motion.div>
   </div>;
 }
 
-export function Footer({ name, profileImage }: { name: string; profileImage: string }) {
+export function Footer({ name, profileImage, hands }: { name: string; profileImage: string; hands: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
-  return <footer ref={ref} id="contact" aria-labelledby="contact-heading" className="relative mb-3 flex min-h-[580px] flex-col items-center overflow-hidden px-5 pt-3.5 pb-2">
-    {!reduced && <FooterShapes target={ref} />}
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end end"] });
+  const progress = reduced ? null : scrollYProgress;
+  const badgeScale = useTransform(progress ?? FINAL, [0, 1], [0.85, 1]);
+  return <footer ref={ref} aria-labelledby="contact-heading" className="relative mb-3 flex min-h-[580px] flex-col items-center overflow-hidden px-5 pt-3.5 pb-2">
+    <FooterSides progress={progress} hands={hands} />
     <div className="relative z-10">
       <p className="mb-2.5 text-center text-[10px] leading-[15px] text-foreground/60">LET’S TALK</p>
       <SectionHeading id="contact-heading" title="Let’s build something together" />
     </div>
     {/* Puts the badge top ~205px below the (two-line) heading's top. */}
-    <div className="relative z-10 mt-[129px] scale-75 sm:scale-[.85] lg:scale-100"><Badge name={name} profileImage={profileImage} /></div>
+    <div className="relative z-10 mt-[129px] scale-75 sm:scale-[.85] lg:scale-100"><motion.div style={{ scale: badgeScale }}><Badge name={name} profileImage={profileImage} /></motion.div></div>
     <p className="mt-auto pt-10 text-sm text-foreground/50">Design and Developed by ©{name}</p>
   </footer>;
 }
