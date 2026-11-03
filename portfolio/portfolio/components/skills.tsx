@@ -19,7 +19,7 @@ function SkillItem({ skill, nameClass }: { skill: Skill; nameClass: string }) {
   </span>;
 }
 
-export function Skills({ skills, cvLink, firstName }: { skills: Portfolio["skills"]; cvLink: string; firstName: string }) {
+export function Skills({ skills, firstName }: { skills: Portfolio["skills"]; firstName: string }) {
   const core = skills.filter(skill => skill.value >= 80);
   const rest = skills.filter(skill => skill.value < 80);
   return <section id="skills" aria-labelledby="skills-heading">
@@ -37,7 +37,7 @@ export function Skills({ skills, cvLink, firstName }: { skills: Portfolio["skill
       </>}
       {skills.length ? <>
         <Divider />
-        <p className="mt-6 text-center text-sm text-foreground/50">Always learning{cvLink ? <> — <a href="/cv" download className="font-semibold text-foreground transition-opacity hover:opacity-70">see my CV →</a></> : "."}</p>
+        <p className="mt-6 text-center text-sm text-foreground/50">Always learning.</p>
       </> : <p className="section-copy mx-auto text-center">The stack is being updated.</p>}
     </div>
   </section>;

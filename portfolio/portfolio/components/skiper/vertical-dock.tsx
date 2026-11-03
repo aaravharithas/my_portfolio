@@ -26,7 +26,8 @@ export function quickActions(profile: NavigationProfile) {
   return all.filter((item): item is ToolItem => !!item);
 }
 
-const DOCK = ["contact", "linkedin", "github", "cv", "share", "menu"];
+// The CV lives in the hero button and navbar icon (plus ⌘K and the D shortcut), so the dock skips it.
+const DOCK = ["contact", "linkedin", "github", "share", "menu"];
 
 export function VerticalDock({ profile }: { profile: NavigationProfile }) {
   const actions = quickActions(profile);

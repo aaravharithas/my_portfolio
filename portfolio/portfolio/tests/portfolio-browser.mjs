@@ -113,12 +113,13 @@ try {
   await until(`!document.querySelector('[role="dialog"]')`);
   // Off-screen animations pause and resume.
   await evaluate(`window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' })`);
-  await until(`document.querySelector('.hero-bg').classList.contains('paused')`);
+  await until(`document.querySelector('header video').paused`);
   await evaluate(`window.scrollTo({ top: 0, behavior: 'instant' })`);
-  await until(`!document.querySelector('.hero-bg').classList.contains('paused')`);
+  await until(`!document.querySelector('header video').paused`);
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   assert.equal(await evaluate(`getComputedStyle(document.documentElement).scrollBehavior`), 'auto');
-  for (const selector of ['.badge-ring', '.hb']) assert.equal(await evaluate(`getComputedStyle(document.querySelector('${selector}')).animationName`), 'none', `${selector} must stop`);
+  assert.equal(await evaluate(`document.querySelector('header video').paused`), true, 'hero video must not play with reduced motion');
+  for (const selector of ['.toolbox-drift']) assert.equal(await evaluate(`getComputedStyle(document.querySelector('${selector}')).animationName`), 'none', `${selector} must stop`);
   assert.equal(await evaluate(`[...document.querySelectorAll('.letter-column')].every(e => getComputedStyle(e).transform === 'none')`), true);
   // Private API fields must never reach the HTML or RSC payload.
   const api = await (await fetch('https://portfolioapi.pythonanywhere.com/portfolio/aaravharithas/')).json();

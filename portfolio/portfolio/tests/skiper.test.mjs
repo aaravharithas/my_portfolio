@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { fillBento } from '../lib/bento.ts';
 import { contactError, parseContact } from '../lib/contact.ts';
+import { contrast, readableOn } from '../lib/color.ts';
 import { POST } from '../app/api/contact/route.ts';
 
 const layout = count => fillBento(Array.from({ length: count }, (_, i) => `p${i}`)).tiles.map(tile => `${tile.slot}:${tile.project ?? tile.playground}`);
@@ -67,4 +68,15 @@ test('contact route: dev fallback, honeypot, validation, Resend payload and 3-pe
     delete process.env.RESEND_API_KEY;
     delete process.env.CONTACT_TO_EMAIL;
   }
+});
+
+test('brand colours are lightened only as much as needed to stay readable on the page background', () => {
+  assert.equal(readableOn('#F7DF1E'), '#f7df1e', 'already readable colours are untouched');
+  for (const brand of ['#0C4B33', '#00599C', '#3776AB', '#000000']) {
+    const shown = readableOn(brand);
+    assert.ok(contrast(shown, '#080808') >= 4.5, `${brand} → ${shown}`);
+    assert.ok(contrast(readableOn(brand), '#080808') < 6, `${brand} is not over-lightened (${shown})`);
+  }
+  const [r, g, b] = [1, 3, 5].map(i => parseInt(readableOn('#0C4B33').slice(i, i + 2), 16));
+  assert.ok(g > r && g > b, 'Django keeps its green hue');
 });
