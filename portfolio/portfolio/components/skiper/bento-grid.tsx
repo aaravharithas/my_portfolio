@@ -89,7 +89,7 @@ function PlaygroundTile({ kind, slot, props }: { kind: Playground; slot: Slot; p
     case "findme":
       return <Card slot={slot} label="Find me" badges={[interactive]}>
         <div className="grid size-full place-items-center">
-          <TooltipToolbar label="Find me" items={quickActions(profile).filter(item => item.id !== "contact" && item.id !== "share")}
+          <TooltipToolbar label="Find me" items={quickActions(profile).filter(item => !["contact", "share", "cv"].includes(item.id))}
             className="flex items-center gap-1 rounded-full border border-white/10 bg-black px-2 py-1.5"
             itemClassName="grid size-9 place-items-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white" />
         </div>

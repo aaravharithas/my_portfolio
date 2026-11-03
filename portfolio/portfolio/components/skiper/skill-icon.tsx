@@ -26,7 +26,7 @@ const ICONS: Record<string, [IconType, string]> = {
   linux: [SiLinux, "#FCC624"],
 };
 
-export const brandColor = (name: string) => ICONS[name.toLowerCase()]?.[1] ?? "#232323";
+export const brandColor = (name: string, fallback = "#232323") => ICONS[name.toLowerCase()]?.[1] ?? fallback;
 
 /** Black or white, whichever reads better on the brand colour. */
 export function inkFor(hex: string) {

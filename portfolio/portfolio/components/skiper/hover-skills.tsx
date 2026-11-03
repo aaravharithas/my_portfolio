@@ -2,8 +2,8 @@
 
 import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
-import { SkillIcon } from "@/components/skiper/skill-icon";
-import { cn } from "@/lib/utils";
+import { brandColor, SkillIcon } from "@/components/skiper/skill-icon";
+import { readableOn } from "@/lib/color";
 import type { Portfolio } from "@/types/portfolio";
 
 type Skill = Portfolio["skills"][number];
@@ -29,6 +29,8 @@ export function HoverSkills({ skills, word, size = "full" }: { skills: Skill[]; 
   const { thumb, grown, text: maxText } = SIZES[size];
   const skill = active === null ? null : skills[active];
   const shown = (skill?.name ?? word).toUpperCase();
+  // The skill's brand colour (primary when it has none), lightened just enough to read on the dark page.
+  const color = skill ? readableOn(brandColor(skill.name, "#0CDCF7")) : undefined;
   // The word box keeps the default word's height and skill names never exceed it (long ones shrink to
   // fit), so swapping words never moves anything below. The thumbnail row is a fixed 120px for the same reason.
   const height = `min(${maxText}px, ${fit(word)})`;
@@ -84,7 +86,7 @@ export function HoverSkills({ skills, word, size = "full" }: { skills: Skill[]; 
 
     <div aria-hidden="true" className="relative mt-2 flex w-full items-center justify-center font-poster leading-none uppercase select-none" style={{ height, fontSize }}>
       <AnimatePresence mode="popLayout" initial={false}>
-        <motion.span key={shown} className={cn("flex whitespace-pre", skill ? "text-primary" : "text-foreground")}>
+        <motion.span key={shown} className="flex whitespace-pre text-foreground" style={{ color }}>
           {Array.from(shown).map((letter, index) => <motion.span key={index}
             initial={reduced ? false : { y: 20, opacity: 0, filter: "blur(6px)" }}
             animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}

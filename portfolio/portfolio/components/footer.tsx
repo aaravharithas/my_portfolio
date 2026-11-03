@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { motion, motionValue, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
-import { PauseOffscreen } from "@/components/pause-offscreen";
+import { motion, useAnimationControls } from "motion/react";
 import { cn } from "@/lib/utils";
 import { PortfolioImage } from "@/components/portfolio-image";
 import { SectionHeading } from "@/components/section-heading";
@@ -24,75 +23,68 @@ const LEAVES = [110, 124, 138, 152, 166, 180, 194, 208, 222]
   .flatMap(leaf => [leaf, { ...leaf, deg: 180 - leaf.deg, tilt: -leaf.tilt }])
   .map(({ r, deg, tilt }) => { const [cx, cy] = polar(r, deg); return { cx, cy, rotate: deg + tilt }; });
 
+// Static, like Skiper's badge: the only motion is the whole-badge flip in Footer (on view and on hover).
 function Badge({ name, profileImage }: { name: string; profileImage: string }) {
-  return <PauseOffscreen className="relative size-[126px]">
+  return <div className="relative size-[126px]">
     <svg viewBox="0 0 126 126" aria-hidden="true" className="absolute inset-0 size-full">
       <path d={SEAL} fill="var(--muted)" stroke="white" strokeOpacity="0.1" />
       <path d={STEMS} fill="none" stroke="currentColor" strokeOpacity="0.25" strokeWidth="0.6" />
       <g fill="currentColor" fillOpacity="0.35">{LEAVES.map(({ cx, cy, rotate }) => <ellipse key={`${cx}-${cy}`} cx={cx} cy={cy} rx="1.5" ry="3.6" transform={`rotate(${rotate} ${cx} ${cy})`} />)}</g>
     </svg>
-    <svg viewBox="0 0 126 126" role="img" aria-label="Open to work" className="badge-ring absolute inset-0 size-full fill-foreground/60 font-mono text-[8px]">
+    <svg viewBox="0 0 126 126" role="img" aria-label="Open to work" className="absolute inset-0 size-full fill-foreground/60 font-mono text-[8px]">
       <defs><path id="badge-text-path" d="M 13,63 a 50,50 0 1,1 100,0 a 50,50 0 1,1 -100,0" /></defs>
       <text xmlSpace="preserve"><textPath href="#badge-text-path" textLength="314">OPEN TO WORK • LET’S BUILD • </textPath></text>
     </svg>
-    <div className="absolute inset-[33px] [perspective:400px]">
-      <div className="badge-flip relative size-full overflow-hidden rounded-full border border-muted3">
-        <PortfolioImage src={profileImage} alt={name} sizes="60px" />
-      </div>
+    <div className="absolute inset-[33px] overflow-hidden rounded-full border border-muted3">
+      <PortfolioImage src={profileImage} alt={name} sizes="60px" />
     </div>
-  </PauseOffscreen>;
-}
-
-const handStyle = { filter: "grayscale(1) brightness(1.1)" };
-// Reduced motion: everything sits in its arrived state.
-const FINAL = motionValue(1);
-
-// The two halves slide in from the screen edges and stop ~24px from the badge. The frame is centred
-// by the footer's items-center. From lg it shifts 40px right (below lg that would clip the left half
-// with a hard edge), so at lg the pads are 87px ± 40px (badge radius 63 + 24px gap). The
-// top-[38%] / 1/2 / 55% values line each half's centre up with the badge centre per breakpoint.
-// With `hands`, public/footer/hand-{left,right}.png fill the halves (fingertips at the inner edge);
-// otherwise the CSS shapes stand in.
-function FooterSides({ progress, hands }: { progress: MotionValue<number> | null; hands: boolean }) {
-  const leftX = useTransform(progress ?? FINAL, [0, 1], [-160, 0]);
-  const rightX = useTransform(progress ?? FINAL, [0, 1], [160, 0]);
-  const leftRotate = useTransform(progress ?? FINAL, [0, 1], [-4, 0]);
-  const rightRotate = useTransform(progress ?? FINAL, [0, 1], [4, 0]);
-  const opacity = useTransform(progress ?? FINAL, [0, 1], [0, 1]);
-  const half = "absolute top-[38%] flex h-[330px] w-1/2 -translate-y-1/2 items-center select-none sm:top-1/2 lg:top-[55%]";
-  return <div aria-hidden="true" className="pointer-events-none absolute top-24 h-[500px] w-full max-w-[1300px] overflow-hidden sm:top-16 lg:top-8 lg:translate-x-10">
-    <motion.div style={{ x: leftX, rotate: leftRotate, opacity }} className={cn(half, "left-0 justify-end pr-[76px] lg:pr-[127px]")}>
-      {hands ? <div className="relative size-full"><Image src="/footer/hand-left.png" alt="" fill sizes="50vw" className="object-contain object-right" style={handStyle} /></div>
-        : <div className="relative h-[240px] w-[480px] shrink-0 origin-right scale-50 sm:scale-75 lg:scale-100">
-          <div className="shape-capsule absolute top-1/2 right-2 h-[150px] w-[440px] -translate-y-1/2 -rotate-[8deg]" />
-          <div className="shape-orb absolute top-0 left-10 size-20" />
-        </div>}
-    </motion.div>
-    <motion.div style={{ x: rightX, rotate: rightRotate, opacity }} className={cn(half, "right-0 justify-start pl-[76px] lg:pl-[47px]")}>
-      {hands ? <div className="relative size-full"><Image src="/footer/hand-right.png" alt="" fill sizes="50vw" className="object-contain object-left" style={handStyle} /></div>
-        : <div className="relative h-[260px] w-[480px] shrink-0 origin-left scale-50 sm:scale-75 lg:scale-100">
-          <div className="shape-capsule absolute top-[38%] right-0 h-[100px] w-[300px] -translate-y-1/2 rotate-[10deg]" />
-          <div className="shape-ring absolute top-1/2 left-0 size-[240px] -translate-y-1/2" />
-          <div className="shape-orb absolute bottom-0 left-[210px] size-14" />
-        </div>}
-    </motion.div>
   </div>;
 }
 
-export function Footer({ name, profileImage, hands }: { name: string; profileImage: string; hands: boolean }) {
-  const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end end"] });
-  const progress = reduced ? null : scrollYProgress;
-  const badgeScale = useTransform(progress ?? FINAL, [0, 1], [0.85, 1]);
-  return <footer ref={ref} aria-labelledby="contact-heading" className="relative mb-3 flex min-h-[580px] flex-col items-center overflow-hidden px-5 pt-3.5 pb-2">
-    <FooterSides progress={progress} hands={hands} />
+const handEase = [0, 0.69, 0.5, 1] as const;
+const handFrame = "pointer-events-none absolute top-24 h-[500px] w-full max-w-[1300px] overflow-hidden sm:top-16 lg:top-8";
+
+/**
+ * Layout and motion follow skiper-ui.com's footer: the badge and both hand frames share one 300px,
+ * full-width row (the frames are positioned against it, which puts the fingertips beside the badge).
+ * Each frame tips, scales and fades in whenever it comes into view; the badge flips in
+ * (rotateY 180→360) and spins once more on hover. The hand PNGs are already light-on-transparent,
+ * so on this dark theme they are shown unfiltered (Skiper's dark-mode --invert is invert(0)).
+ */
+export function Footer({ name, profileImage }: { name: string; profileImage: string }) {
+  const badge = useAnimationControls();
+  const spinning = useRef(false);
+  async function spin() {
+    if (spinning.current) return;
+    spinning.current = true;
+    // The entrance flip ends at 360°, so restart from the identical-looking 0° or the first hover spin
+    // would be 360→360 and do nothing (as on skiper-ui.com).
+    badge.set({ rotateY: 0 });
+    await badge.start({ rotateY: 360, transition: { duration: 1, ease: "easeInOut" } });
+    badge.set({ rotateY: 0 });
+    spinning.current = false;
+  }
+  return <footer aria-labelledby="contact-heading" className="relative mb-3 flex flex-col items-center overflow-hidden px-5 pt-3.5">
     <div className="relative z-10">
       <p className="mb-2.5 text-center text-[10px] leading-[15px] text-foreground/60">LET’S TALK</p>
       <SectionHeading id="contact-heading" title="Let’s build something together" />
     </div>
-    {/* Puts the badge top ~205px below the (two-line) heading's top. */}
-    <div className="relative z-10 mt-[129px] scale-75 sm:scale-[.85] lg:scale-100"><motion.div style={{ scale: badgeScale }}><Badge name={name} profileImage={profileImage} /></motion.div></div>
-    <p className="mt-auto pt-10 text-sm text-foreground/50">Design and Developed by ©{name}</p>
+    <div className="relative mt-[-30px] flex h-[300px] w-screen items-center justify-center gap-3 sm:mt-[34px]">
+      <motion.div onMouseEnter={spin} animate={badge} initial={{ rotateY: 180 }} whileInView={{ rotateY: 360 }} transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="relative z-10 flex scale-75 items-center justify-center sm:scale-[.85] lg:scale-100">
+        <Badge name={name} profileImage={profileImage} />
+      </motion.div>
+      <motion.div aria-hidden="true" initial={{ x: 10, opacity: 0.5, scale: 0.8, rotate: 10 }} whileInView={{ x: 20, opacity: 1, scale: 1, rotate: 0 }}
+        transition={{ duration: 1, ease: handEase }} className={cn(handFrame, "translate-x-10")}>
+        <Image src="/footer/hand-right.png" alt="" width={704} height={376} sizes="(max-width: 1300px) 50vw, 650px" className="absolute right-0 h-auto w-1/2 select-none" />
+        <div className="absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background" />
+      </motion.div>
+      <motion.div aria-hidden="true" initial={{ x: -10, opacity: 0.5, scale: 0.8, rotate: -10 }} whileInView={{ x: 0, opacity: 1, scale: 1, rotate: 0 }}
+        transition={{ duration: 1, ease: handEase }} className={cn(handFrame, "-translate-x-14")}>
+        <Image src="/footer/hand-left.png" alt="" width={686} height={388} sizes="(max-width: 1300px) 50vw, 650px" className="absolute left-0 h-auto w-1/2 select-none" />
+        <div className="absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background" />
+      </motion.div>
+    </div>
+    <p className="mb-2 text-sm text-foreground/50 sm:mt-24">Design and Developed by ©{name}</p>
   </footer>;
 }

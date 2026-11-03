@@ -3,8 +3,18 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Copy } from "lucide-react";
-import { PauseOffscreen } from "@/components/pause-offscreen";
+import { LoopVideo } from "@/components/loop-video";
 import { notifyIsland } from "@/components/skiper/dynamic-island";
+
+// As on skiper-ui.com, the background video fades in over 2s and rises 100px over 5s after a 2s delay,
+// once the name roll has landed. motion-reduce pins the final state in CSS so the poster shows from the
+// first paint, before hydration.
+function HeroVideo() {
+  return <motion.div className="absolute inset-0 motion-reduce:opacity-100! motion-reduce:[transform:none]!" initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}
+    transition={{ opacity: { duration: 2, delay: 2 }, y: { duration: 5, delay: 2 } }}>
+    <LoopVideo preload="auto" className="size-full object-cover" />
+  </motion.div>;
+}
 
 type HeroProps = { name: string; firstName: string; lastName: string; title: string; email: string; cvLink: string; rolls: number[] };
 
@@ -20,16 +30,7 @@ export function Hero({ name, firstName, lastName, title, email, cvLink, rolls }:
   }
 
   return <header className="relative isolate flex min-h-svh flex-col items-center justify-center overflow-hidden px-5 text-center">
-    <PauseOffscreen aria-hidden="true" className="hero-bg pointer-events-none">
-      <div className="hero-floor" />
-      <div className="hero-smoke">
-        <div className="absolute inset-[60px]">
-          <div className="hb hb-navy" /><div className="hb hb-blue" /><div className="hb hb-deep" />
-          <div className="hb hb-pocketL" /><div className="hb hb-pocketR" />
-          <div className="hb hb-plume" /><div className="hb hb-core" />
-        </div>
-      </div>
-    </PauseOffscreen>
+    <div aria-hidden="true" className="hero-bg pointer-events-none"><HeroVideo /></div>
     <div className="relative z-10 mt-20 flex flex-col items-center">
       <p className="eyebrow">Hi, I’m</p>
       <h1 aria-label={name} className="display-name max-w-full">
