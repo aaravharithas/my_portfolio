@@ -20,7 +20,7 @@ export type Portfolio = {
 };
 
 // Only this explicit subset crosses into the interactive navbar.
-export type NavigationProfile = Pick<Portfolio, "name" | "username" | "profileImage" | "cvLink" | "email"> & {
+export type NavigationProfile = Pick<Portfolio, "name" | "username" | "profileImage" | "cvLink" | "email" | "phone"> & {
   links: { label: "LinkedIn" | "Instagram" | "GitHub"; href: string }[];
 };
 

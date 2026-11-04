@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { Copy } from "lucide-react";
+import { Download } from "lucide-react";
 import { LoopVideo } from "@/components/loop-video";
-import { notifyIsland } from "@/components/skiper/dynamic-island";
 
 // As on skiper-ui.com, the background video fades in over 2s and rises 100px over 5s after a 2s delay,
 // once the name roll has landed. motion-reduce pins the final state in CSS so the poster shows from the
@@ -16,18 +14,11 @@ function HeroVideo() {
   </motion.div>;
 }
 
-type HeroProps = { name: string; firstName: string; lastName: string; title: string; email: string; cvLink: string; rolls: number[] };
+type HeroProps = { name: string; firstName: string; lastName: string; title: string; cvLink: string; rolls: number[] };
 
-export function Hero({ name, firstName, lastName, title, email, cvLink, rolls }: HeroProps) {
+export function Hero({ name, firstName, lastName, title, cvLink, rolls }: HeroProps) {
   const reduced = useReducedMotion();
-  const [status, setStatus] = useState("");
   let index = 0;
-
-  async function copyEmail() {
-    try { await navigator.clipboard.writeText(email); setStatus("Copied"); notifyIsland({ kind: "copied", label: "Email copied" }); }
-    catch { setStatus("Copy failed"); }
-    setTimeout(() => setStatus(""), 1600);
-  }
 
   return <header className="relative isolate flex min-h-svh flex-col items-center justify-center overflow-hidden px-5 text-center">
     <div aria-hidden="true" className="hero-bg pointer-events-none"><HeroVideo /></div>
@@ -47,13 +38,11 @@ export function Hero({ name, firstName, lastName, title, email, cvLink, rolls }:
       </h1>
       <p className="eyebrow">{title}</p>
       <div className="mt-24 flex flex-col items-center gap-2 md:flex-row">
-        {email && <button type="button" onClick={copyEmail} aria-label="Copy email address" className="flex h-12 cursor-pointer items-center gap-2 rounded-2xl bg-muted px-5 font-mono text-sm active:scale-[0.999]">
-          <span>pip install {firstName.toLowerCase().replace(/\s+/g, "-")}<span className="opacity-40">/backend</span></span>
-          {status ? <span className="text-xs opacity-60">{status}</span> : <Copy size={16} className="opacity-40" aria-hidden="true" />}
-        </button>}
-        {cvLink && <a href="/cv" download className="primary-button">Download CV</a>}
+        {cvLink && <a href="/cv" download className="flex h-12 items-center gap-2 rounded-2xl bg-muted px-5 font-mono text-sm transition-colors hover:bg-muted2 active:scale-[0.999]">
+          <span>pip install {firstName.toLowerCase().replace(/\s+/g, "-")}<span className="opacity-40">/resume</span><span className="sr-only"> (download CV)</span></span>
+          <Download size={16} className="opacity-40" aria-hidden="true" />
+        </a>}
       </div>
     </div>
-    <span role="status" className="sr-only">{status === "Copied" ? "Email copied." : status && "Copy failed. Please allow clipboard access and retry."}</span>
   </header>;
 }

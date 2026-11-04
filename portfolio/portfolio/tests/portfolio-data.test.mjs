@@ -8,9 +8,12 @@ const project = { title: 'Example', image: 'https://portfolioapi.pythonanywhere.
 const base = { name: 'Test Developer', firstName: 'Test', lastName: 'Developer', email: 'test@example.com', aboutMe: 'I am manily focused on Python.', social: { twitter: 'https://twitter.com/', linkedin: 'https://linkedin.com/in/test/' }, projects: [project] };
 
 test('normalization discards private data and corrects the introduction for display', () => {
-  const result = normalizePortfolio({ ...base, dob: 'PRIVATE_DOB', address: 'PRIVATE_ADDRESS', zipCode: 'PRIVATE_ZIP', phone: 'PRIVATE_PHONE' });
+  const result = normalizePortfolio({ ...base, dob: 'PRIVATE_DOB', address: 'PRIVATE_ADDRESS', zipCode: 'PRIVATE_ZIP', phone: '98765 43210' });
   assert.doesNotMatch(JSON.stringify(result), /PRIVATE_/);
-  for (const key of ['dob', 'address', 'zipCode', 'phone']) assert.equal(key in result, false);
+  for (const key of ['dob', 'address', 'zipCode']) assert.equal(key in result, false);
+  // The phone is shown on the page by the owner's choice, but only if it looks like a phone number.
+  assert.equal(result.navigation.phone, '98765 43210');
+  for (const phone of ['call me', '<script>', '123']) assert.equal(normalizePortfolio({ ...base, phone }).navigation.phone, '');
   assert.match(result.aboutMe, /mainly/);
   assert.equal(result.navigation.email, base.email);
   assert.equal(result.twitter, '');

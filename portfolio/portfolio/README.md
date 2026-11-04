@@ -25,15 +25,16 @@ Styled to match skiper-ui.com (values measured from the live site; no Skiper ass
 - Hero: skiper-ui.com's looping background video (`public/hero/loopbg.mp4`, poster `loopbg-poster.jpg`), fading and rising in after the name roll, paused off screen and with reduced motion. Slot-machine letter roll (6–22 copies per letter, server-randomised so it hydrates cleanly); `pip install <name>/backend` pill that copies the email; Download CV. The video, like the footer hands, is Skiper UI's asset: replace it if you don't have their permission.
 - Centred word-by-word blur headings on every section (no numbered eyebrows).
 - About card with a scroll-linked colour reveal over a grainy monochrome copy.
-- Work: Skiper-style bento (lg rows 275/322/322/322, areas `a b b c / d d e c / f f g g / h h g g`). Projects fill g → d → h → f → b → a → e → c; empty slots get playground tiles: Toolbox (drag/inertia icon wall), Stack (mini hover skills), Now (dynamic island), About (hover reveal), Find me (tooltip toolbar), Sticker trail, Current role. Projects beyond 8 flow into extra rows. An optional project `video` plays on hover.
+- Work: projects only, in Skiper's card grid, mixing big squares, tall and wide rectangles and small squares without gaps for any count (`lib/bento.ts`). Two-row blocks hold four projects (2×2, 1×2, 1×1, 1×1) or three (2×2, 2×1, 2×1), with the big tile alternating sides. Two projects show a big square beside a tall tile; one shows a big square. Details (metadata, description, tech) show on hover/focus, or always on touch screens. An optional project `video` plays on hover.
+- Playzone: the interactive toys, kept out of the Work grid. A drag/inertia icon wall, a big sticker-trail canvas (mouse, or a finger dragged sideways) and a hover colour reveal.
 - Experience as a narrow centred link list; rows expand to description and location.
-- Skills: dashed dividers, CORE hover-skills (value ≥ 80: thumbnails grow, a huge Anton word swaps to the skill, a cursor circle shows the %), ALSO WORKS WITH row, CV link.
+- Skills: every skill in the hover row (thumbnails grow and the huge Anton word swaps to the skill in its brand colour, while a cursor circle shows the %). A REACH ME row follows: LinkedIn, Phone and Email, each showing its value on hover/focus and opening the link, dialler or mail app.
 - Contact: three-step "devour" form (email → name → message) posting to `/api/contact` (validation, honeypot, 3/min per-IP limit, Resend).
 - Vertical dock (md+) with a shared sliding tooltip and global shortcuts: C contact, L LinkedIn, G GitHub, I Instagram, E copy email, D CV, S copy link, ⌘K menu. A dynamic island under the navbar confirms copies, CV downloads and sent messages.
 - Education as pricing-style cards with a cyan glow on the most recent one.
 - Footer: static scalloped laurel badge with your photo; like skiper-ui.com it flips in when it comes into view and spins once on hover, with no continuous motion. Two hands (`public/footer/hand-left.png`, `hand-right.png`) tip, scale and fade in from the sides, matching skiper-ui.com's footer. The hand images are Skiper UI's own renders: replace those two files with your own if you don't have their permission. Single credit line.
 - Every looping animation (hero video, toolbox drift, island pulse) pauses while off screen or in a background tab.
-- One CV download per context: the hero button and the navbar icon, plus ⌘K and the `D` shortcut.
+- CV downloads in two places: the hero's `pip install <name>/resume` pill and the navbar icon, plus ⌘K and the `D` shortcut.
 - `prefers-reduced-motion`: static name and background, no drift, spin or particle effects; reveals and scroll elements shown in their final state.
 - Server fetch with one-hour revalidation, 20s timeout, loading skeleton and retry fallback.
 
@@ -79,7 +80,7 @@ tests/
   portfolio-browser.mjs       Chrome CDP checks (npm run test:browser)
 ```
 
-The server loader projects only explicitly allowed fields. Birth date, address, postcode and phone are discarded before rendering or client serialization. Email is supplied only to the copy action; it is not visible text or a mailto link. This is a display rule, not a claim that the public API email is secret.
+The server loader projects only explicitly allowed fields. Birth date, address and postcode are discarded before rendering or client serialization. By the owner's choice, phone and email are public: they appear in the Skills REACH ME row as tel:/mailto: links. This is a display rule, not a claim that the public API email is secret.
 
 Bare-domain social links are omitted. The API has no profile GitHub field, so the GitHub command uses its first valid project repository. The CV route only retrieves media from the specified API host.
 
