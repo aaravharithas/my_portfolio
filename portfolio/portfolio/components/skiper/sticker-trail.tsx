@@ -12,7 +12,7 @@ const LIFETIME = 600;
 const FADE = 400;
 const HINT_DELAY = 1000;
 
-/** Drops a logo sticker every 40px of mouse travel; each pops in, lingers 600ms, then fades out. Mouse only. */
+/** Drops a logo sticker every 40px of pointer travel; each pops in, lingers 600ms, then fades out. Touch draws while dragging sideways. */
 export function StickerTrail({ names }: { names: string[] }) {
   const [stickers, setStickers] = useState<Sticker[]>([]);
   const [idle, setIdle] = useState(true);
@@ -31,7 +31,7 @@ export function StickerTrail({ names }: { names: string[] }) {
   }, [stickers.length]);
 
   function onMove(event: PointerEvent<HTMLDivElement>) {
-    if (event.pointerType !== "mouse" || !names.length) return;
+    if (!names.length || (event.pointerType !== "mouse" && !event.buttons)) return;
     const box = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - box.left;
     const y = event.clientY - box.top;
@@ -47,9 +47,9 @@ export function StickerTrail({ names }: { names: string[] }) {
     timers.current.add(timer);
   }
 
-  return <div className="relative size-full overflow-hidden" onPointerMove={onMove} onPointerLeave={() => { last.current = null; }}>
+  return <div className="relative size-full touch-pan-y overflow-hidden" onPointerMove={onMove} onPointerLeave={() => { last.current = null; }} onPointerUp={() => { last.current = null; }}>
     <div aria-hidden="true" className={`pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 transition-opacity duration-300 ${idle && !stickers.length ? "opacity-100" : "opacity-0"}`}>
-      <p className="text-[10px] tracking-widest text-white/40">MOVE YOUR MOUSE</p>
+      <p className="text-[10px] tracking-widest text-white/40"><span className="[@media(hover:none)]:hidden">MOVE YOUR MOUSE</span><span className="hidden [@media(hover:none)]:inline">DRAG A FINGER ACROSS</span></p>
       <span className="h-8 w-px bg-white/20" />
     </div>
     <AnimatePresence>

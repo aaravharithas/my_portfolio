@@ -92,15 +92,9 @@
 /* Hero: #101010 shows until the background video fades in. */
 .hero-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #101010; }
 
-/* Work bento. Mobile: one column in DOM (fill-priority) order. md/lg: tiles placed by named area;
-   projects beyond the 8 slots auto-flow into extra 322px rows. */
+/* Work grid rows; tile sizes come from lib/bento.ts. */
 .bento { grid-auto-rows: 320px; }
-@media (min-width: 768px) {
-  .bento { grid-template-areas: "a c" "e c" "b b" "d d" "g g" "g g" "f f" "h h"; grid-auto-rows: 322px; }
-}
-@media (min-width: 1024px) {
-  .bento { grid-template-areas: "a b b c" "d d e c" "f f g g" "h h g g"; grid-template-rows: 275px 322px 322px 322px; }
-}
+@media (min-width: 768px) { .bento { grid-auto-rows: 322px; } }
 
 /* Film grain for the monochrome photo layer. */
 .grain { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); mix-blend-mode: overlay; opacity: .45; }
@@ -108,7 +102,7 @@
 /* Toolbox wall idle drift: exactly one 576×672 pattern per loop, so it repeats seamlessly. */
 .toolbox-drift { animation: toolbox-drift 60s linear infinite; will-change: transform; }
 @keyframes toolbox-drift { to { transform: translate(-576px, -672px); } }
-/* Set by <PauseOffscreen> on the bento "Now" island and toolbox wall. */
+/* Set by <PauseOffscreen> on the toolbox wall. */
 .paused * { animation-play-state: paused; }
 
 @media (prefers-reduced-motion: reduce) {

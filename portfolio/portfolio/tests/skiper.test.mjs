@@ -1,19 +1,27 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { fillBento } from '../lib/bento.ts';
+import { projectTiles } from '../lib/bento.ts';
 import { contactError, parseContact } from '../lib/contact.ts';
 import { contrast, readableOn } from '../lib/color.ts';
 import { POST } from '../app/api/contact/route.ts';
 
-const layout = count => fillBento(Array.from({ length: count }, (_, i) => `p${i}`)).tiles.map(tile => `${tile.slot}:${tile.project ?? tile.playground}`);
-
-test('bento fills g, d, h, f, b, a, e, c with projects and gives every other slot its playground tile', () => {
-  assert.deepEqual(layout(0), ['g:soon', 'd:role', 'h:stickers', 'f:findme', 'b:stack', 'a:photo', 'e:now', 'c:toolbox']);
-  assert.deepEqual(layout(1), ['g:p0', 'd:role', 'h:stickers', 'f:findme', 'b:stack', 'a:photo', 'e:now', 'c:toolbox']);
-  assert.deepEqual(layout(3), ['g:p0', 'd:p1', 'h:p2', 'f:findme', 'b:stack', 'a:photo', 'e:now', 'c:toolbox']);
-  assert.deepEqual(layout(8), ['g:p0', 'd:p1', 'h:p2', 'f:p3', 'b:p4', 'a:p5', 'e:p6', 'c:p7']);
-  assert.deepEqual(fillBento(Array.from({ length: 10 }, (_, i) => i)).extra, [8, 9]);
-  assert.deepEqual(fillBento([1]).extra, []);
+test('project tiles mix big squares, tall, wide and small tiles without holes for any count', () => {
+  assert.deepEqual(projectTiles(0), []);
+  assert.deepEqual(projectTiles(1), ['solo']);
+  assert.deepEqual(projectTiles(2), ['pair-big', 'pair-tall']);
+  assert.deepEqual(projectTiles(3), ['big', 'wide', 'wide']);
+  assert.deepEqual(projectTiles(4), ['big', 'tall', 'small', 'small']);
+  assert.deepEqual(projectTiles(5), ['big', 'tall', 'small', 'small', 'banner']);
+  assert.deepEqual(projectTiles(6), ['big', 'tall', 'small', 'small', 'wide', 'wide']);
+  assert.deepEqual(projectTiles(7), ['big', 'tall', 'small', 'small', 'big-right', 'wide', 'wide']);
+  assert.deepEqual(projectTiles(8), ['big', 'tall', 'small', 'small', 'big-right', 'tall', 'small', 'small']);
+  // Area check on the 4-column grid: every block covers 2 full rows (8 cells) and leftovers one full row (4 cells).
+  const cells = { big: 4, 'big-right': 4, tall: 2, small: 1, wide: 2, banner: 4 };
+  for (let n = 3; n <= 13; n++) {
+    const area = projectTiles(n).reduce((sum, size) => sum + cells[size], 0);
+    const blocks = Math.floor(n / 4) + (n % 4 === 3 ? 1 : 0);
+    assert.equal(area, blocks * 8 + (n % 4 === 2 || n % 4 === 1 ? 4 : 0), `n=${n}`);
+  }
 });
 
 test('contact validation trims, checks email shape and enforces limits', () => {

@@ -70,7 +70,6 @@ try {
     assert.ok(geometry.gap >= 0 && geometry.gap <= 12);
     assert.ok(geometry.bottom <= geometry.height);
     assert.equal(await evaluate(`document.querySelector('[role="dialog"]').innerText.includes('Twitter')`), false);
-    assert.equal(await evaluate(`/[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}/i.test(document.body.innerText)`), false, 'email must not be visible');
     await mkdir('/tmp/portfolio-foundation-screenshots', { recursive: true });
     const { data } = await send('Page.captureScreenshot', { format: 'png' });
     await writeFile(`/tmp/portfolio-foundation-screenshots/${width}.png`, Buffer.from(data, 'base64'));
@@ -124,7 +123,7 @@ try {
   // Private API fields must never reach the HTML or RSC payload.
   const api = await (await fetch('https://portfolioapi.pythonanywhere.com/portfolio/aaravharithas/')).json();
   const html = await (await fetch(base)).text();
-  assert.deepEqual(['dob', 'address', 'zipCode', 'phone'].filter(field => api[field] && html.includes(api[field])), []);
+  assert.deepEqual(['dob', 'address', 'zipCode'].filter(field => api[field] && html.includes(api[field])), []);
   assert.deepEqual(errors, []);
   console.log('PASS: 375/768/1280px, off-screen pause/resume, private fields absent, reduced motion stops marquee/badge/blobs/letter roll, dark tokens, League Spartan hero font, palette alignment, shortcuts, focus, filtering, navigation, email privacy/copy success/failure, outside dismissal, reduced motion, no runtime exceptions.');
 } finally {

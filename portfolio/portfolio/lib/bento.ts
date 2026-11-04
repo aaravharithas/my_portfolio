@@ -1,18 +1,20 @@
-// Bento slots in fill priority: projects take g first, then d, h, f, b, a, e, c.
-// Rendering in this order also gives mobile (one column) the projects first.
-export const SLOT_ORDER = ["g", "d", "h", "f", "b", "a", "e", "c"] as const;
-export type Slot = (typeof SLOT_ORDER)[number];
-export type Playground = "soon" | "role" | "stickers" | "findme" | "stack" | "photo" | "now" | "toolbox";
+// Tile shapes for n projects on the Work grid: Skiper's mix of big squares, tall and wide rectangles
+// and small squares, without ever leaving a hole. Each 2-row block of the 4-column grid holds either
+// four projects (big 2×2, tall 1×2, two small 1×1) or three (big 2×2, two wide 2×1); the big tile
+// alternates sides. Leftovers fill a final row: two wide tiles, or one full-width banner.
+// Two projects get a big square beside a tall tile in a centred 3-column grid; one gets a big square.
+export type TileSize = "solo" | "pair-big" | "pair-tall" | "big" | "big-right" | "tall" | "small" | "wide" | "banner";
 
-// What each slot shows when no project lands there. g only empties with zero projects.
-const PLAYGROUND: Record<Slot, Playground> = { g: "soon", d: "role", h: "stickers", f: "findme", b: "stack", a: "photo", e: "now", c: "toolbox" };
-
-export type BentoTile<P> = { slot: Slot; project: P } | { slot: Slot; playground: Playground };
-
-/** Projects beyond the 8 slots come back as `extra` and render as plain tiles after the grid areas. */
-export function fillBento<P>(projects: P[]): { tiles: BentoTile<P>[]; extra: P[] } {
-  return {
-    tiles: SLOT_ORDER.map((slot, index): BentoTile<P> => index < projects.length ? { slot, project: projects[index] } : { slot, playground: PLAYGROUND[slot] }),
-    extra: projects.slice(SLOT_ORDER.length),
-  };
+export function projectTiles(count: number): TileSize[] {
+  if (count === 1) return ["solo"];
+  if (count === 2) return ["pair-big", "pair-tall"];
+  const sizes: TileSize[] = [];
+  let blocks = 0;
+  const big = (): TileSize => (blocks++ % 2 ? "big-right" : "big");
+  for (let i = 0; i < Math.floor(count / 4); i++) sizes.push(big(), "tall", "small", "small");
+  const rest = count % 4;
+  if (rest === 3) sizes.push(big(), "wide", "wide");
+  if (rest === 2) sizes.push("wide", "wide");
+  if (rest === 1) sizes.push("banner");
+  return sizes;
 }

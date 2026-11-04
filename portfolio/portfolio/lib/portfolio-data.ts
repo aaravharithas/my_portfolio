@@ -15,7 +15,8 @@ export function mediaUrl(value: unknown): string {
   return url.protocol === "https:" && url.hostname === "portfolioapi.pythonanywhere.com" && url.pathname.startsWith("/media/") ? valid : "";
 }
 
-// Explicit projection keeps private API fields out of HTML and client props.
+// Explicit projection keeps private API fields (dob, address, zipCode) out of HTML and client props.
+// Email and phone are shown on the page by the owner's choice (Skills → contact row).
 export function normalizePortfolio(input: unknown): PublicPortfolio {
   const data = record(input);
   if (!text(data.name)) throw new Error("Portfolio data is missing a name.");
@@ -34,6 +35,7 @@ export function normalizePortfolio(input: unknown): PublicPortfolio {
   const navigation: NavigationProfile = {
     name: text(data.name), username: text(data.username), profileImage: mediaUrl(data.profileImage), cvLink: mediaUrl(data.cvLink),
     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : "", links,
+    phone: /^\+?[\d\s().-]{7,20}$/.test(text(data.phone)) ? text(data.phone) : "",
   };
   return {
     navigation, firstName: text(data.firstName) || text(data.name), lastName: text(data.firstName) ? text(data.lastName) : "",
